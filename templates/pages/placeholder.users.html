@@ -1,0 +1,63 @@
+{% extends 'layouts/main.html' %}
+
+{% block title %} Users {% endblock %}
+
+{% block css %}
+
+{% endblock %}
+
+
+{% block banner %} Users {% endblock %}
+
+{% block content %}
+    <div class="grid-container">
+    <div class="card block trailer-1">
+        <div class="panel">
+            <div class="panel-header">All Users</div>
+            <div class="loader is-active padding-leader-3 padding-trailer-3">
+                <div class="loader-bars"></div>
+                <div class="loader-text">Loading...</div>
+            </div>
+        {% if users %}
+            <table class="modifier-class table-striped display trailer-1" id="user-table" cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    <th>Active</th>
+                    <th>User</th>
+                    <th>Total Time (min.)</th>
+                    <th>Join Date</th>
+                </tr>
+                </thead>
+                    <script>$(".loader").hide()</script>
+                    <tbody>
+                    {% for user in users %}
+                        <tr class='clickable-row' data-href="{{ url_for('username', username=user.name) }}">
+                            {% if user.active == 'Y' %}
+                                <td><span class="icon-ui-check-mark icon-ui-green font-size-1"></span></td>
+                            {% else %}
+                                <td></td>
+                            {% endif %}
+                            <td>{{ user.name }}</td>
+                            {% if user.time_sum %}
+                                <td>{{ user.time_sum }}</td>
+                            {% else %}
+                                <td>0</td>
+                            {% endif %}
+                            {% if user.join_date %}
+                                <td>{{ user.join_date.strftime('%Y-%m-%d') }}</td>
+                            {% else %}
+                                <td></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                {% else %}
+                    <script>$(".loader").hide()</script>
+                    No User Data.
+                {% endif %}
+            </table>
+        </div>
+    </div>
+    </div>
+
+{% endblock %}

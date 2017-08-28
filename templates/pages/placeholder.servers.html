@@ -1,0 +1,45 @@
+{% extends 'layouts/main.html' %}
+
+{% block title %} Servers {% endblock %}
+
+{% block javascript %}{% endblock %}
+
+{% block banner %} License Servers {% endblock %}
+
+{% block content %}
+    <div class="grid-container">
+        {% if servers %}
+            {% for s in servers %}
+                <div class="card card-wide trailer-1">
+                    {% if s[2] == 'OK' %}
+                        <div class="panel server-panel" style="width:100%">
+                            <span class="icon-ui-check-mark icon-ui-green font-size-2">{{ s[0] }} </span>
+                            <span class="center-text"> Last updated {{ s[3] | relative_time }} ago</span>
+                            <a href="{{ url_for('servername', servername=s[0]) }}">
+                                <button class="btn modifier-class" style="float: right;"> View Details</button>
+                            </a>
+                        </div>
+                    {% elif s[2] == 'UPDATING' %}
+                        <div class="panel server-panel" style="width:100%">
+                            <span class="icon-ui-refresh icon-ui-green font-size-2">{{ s[0] }} </span>
+                            <span class="center-text"> Updating...</span>
+                            <a href="{{ url_for('servername', servername=s[0]) }}">
+                                <button class="btn modifier-class" style="float: right;"> View Details</button>
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="panel server-panel" style="width:100%">
+                            <span class="icon-ui-notice-round icon-ui-orange font-size-2">{{ s[0] }} </span>
+                            <span class="center-text"> Last updated {{ s[3] | relative_time }} ago</span>
+                            <a href="{{ url_for('servername', servername=s[0]) }}">
+                                <button class="btn modifier-class" style="float: right;"> View Details</button>
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            </div>
+        {% else %}
+            No servers found.
+        {% endif %}
+{% endblock %}

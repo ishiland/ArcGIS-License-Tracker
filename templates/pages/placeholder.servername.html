@@ -1,0 +1,92 @@
+{% extends 'layouts/main.html' %}
+
+{% block title %} Servers {% endblock %}
+{% block banner %}
+    <a href="{{ url_for('servers') }}" style="color:inherit">License Servers</a> / {{ request.path.split('/')[-1] }}
+{% endblock %}
+{% block content %}
+    <div class="grid-container">
+
+        <div class="column-18">
+        <div class="card block trailer-half">
+            <div class="panel">
+                <div class="panel-header">Issue History</div>
+                {% if server_history %}
+                    <table id='server-history'>
+                        <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Info</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for s in server_history %}
+                            <tr>
+                                <td>{{ s[2] }}</td>
+                                <td>{{ s[0] }}</td>
+                                <td>{{ s[1] }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    No issues found.
+                {% endif %}
+            </div>
+        </div>
+    </div>
+        <div class="column-6">
+<div class="card block trailer-half">
+            <div class="panel">
+                <div class="panel-header">Status</div>
+                {% if server_status %}
+                    {% if server_status[1] == 'OK' %}
+                        <span class="icon-ui-check-mark icon-ui-green font-size-1">{{ server_status[0] }} is up.</span>
+                        <br>
+                        Last updated {{ server_status[3] | relative_time }} ago. Update completed in
+                        {{ server_status[4] }}s.
+                    {% elif server_status[1] == 'UPDATING' %}
+                        <span class="icon-ui-refresh icon-ui-green font-size-1">Updating {{ server_status[0] }}</span>
+                        <br>
+                        Please refresh your browser in a few moments to reflect recent data.
+                    {% else %}
+                        <span class="icon-ui-notice-round icon-ui-orange font-size-1">Check {{ server_status[0] }}</span>
+                        <br>
+                        Last updated {{ server_status[3] | relative_time }} ago. Update completed in
+                        {{ server_status[4] }}s.
+                    {% endif %}
+                {% else %}
+                    Could not retrieve server status.
+                {% endif %}
+            </div>
+</div>
+        <div class="card block trailer-half">
+            <div class="panel">
+                <div class="panel-header">Associated Users</div>
+                {% if user_count %}{{ user_count }} users{% else %}0 users{% endif %}
+            </div>
+        </div>
+        <div class="card block trailer-half">
+            <div class="panel">
+                <div class="panel-header">Tracking Start Date</div>
+                {% if start_date %}{{ start_date }}{% else %} Could not retrieve start date.{% endif %}
+            </div>
+        </div>
+        <div class="card block trailer-half">
+            <div class="panel">
+                <div class="panel-header">Licensed Products</div>
+                {% if products %}
+                    <ul>
+                        {% for p in products %}
+                            <li>
+                                <a href="{{ url_for('productname', servername=request.path.split('/')[-1], productname=p[0]) }}">{{ p[0] | replace('-',' ') }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}No products found.{% endif %}
+            </div>
+        </div>
+        </div>
+    </div>
+{% endblock %}

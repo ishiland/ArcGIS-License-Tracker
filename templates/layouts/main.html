@@ -1,0 +1,108 @@
+<!doctype html>
+<!--[if lt IE 9]>  <html class="ie lt-ie9 ie8"> <![endif]-->
+<!--[if IE 9]>     <html class="ie ie9"> <![endif]-->
+<!--[if !IE]><!--> <html> <!--<![endif]-->
+<html lang="en" xml:lang="en" xmlns= "http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <meta charset="UTF-8">
+  <meta name="google" content="notranslate">
+  <meta http-equiv="Content-Language" content="en">
+    <title>Flex License Monitor Tool - {% block title %}{% endblock %}</title>
+    <link rel="shortcut icon" href="/static/images/favicon.ico">
+    <!-- get calcite-web css from the cdn (use latest version) -->
+    <link rel="stylesheet" href="/static/css/calcite-web.min.css">
+    <link rel="stylesheet" href="/static/css/main.css?q=1280549780">
+  <link rel="stylesheet" href="/static/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="/static/css/buttons.dataTables.min.css">
+    {% block css %}{% endblock %}
+    <script type="text/javascript" src="/static/js/libs/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="/static/js/app.js?version=7"></script>
+    <script type="text/javascript" src="/static/js/libs/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="/static/js/libs/dataTables.min.js"></script>
+  <script type="text/javascript" src="/static/js/libs/dataTables.buttons.min.js"></script>
+  <script type="text/javascript" src="/static/js/libs/jszip.min.js"></script>
+  <script type="text/javascript" src="/static/js/libs/pdfmake.min.js"></script>
+  <script type="text/javascript" src="/static/js/libs/vfs_fonts.js"></script>
+  <script type="text/javascript" src="/static/js/libs/buttons.html5.min.js"></script>
+  <!--<script type="text/javascript" src="/static/js/libs/jquery.sortElements.js"></script>-->
+  <script type="text/javascript" src="/static/js/libs/stupidtable.min.js"></script>
+  <script type="text/javascript" src="/static/js/libs/aWapBE.js"></script>
+    {% block javascript %}{% endblock %}
+    <!--[if lt IE 9]>
+      <script src="/static/javascripts/libs/selectivizr.js"></script>
+      <!--<script src="/assets/javascripts/libs/html5shiv.js"></script>-->
+    <![endif]-->
+    <script type=text/javascript>
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+  </head>
+  <body>
+<div class="wrapper">
+  <!-- top navigation -->
+  <header class="top-nav">
+    <div class="grid-container">
+      <div class="column-24">
+        <a href="{{url_for('dashboard') }}" class="top-nav-title">Flex License Monitor Tool</a>
+        <nav class="top-nav-list" role="navigation" aria-labelledby="topnav">
+           <a {% if request.endpoint== 'dashboard' %} class='top-nav-link is-active' {% else %} class='top-nav-link' {% endif %} href="{{
+                url_for('dashboard') }}">Dashboard</a>
+           <a {% if request.endpoint== 'products' %} class='top-nav-link is-active' {% else %} class='top-nav-link'{% endif %} href="{{
+                url_for('products') }}">Products</a>
+           <a {% if request.endpoint== 'users' %} class='top-nav-link is-active' {% else %} class='top-nav-link' {% endif %} href="{{
+                url_for('users') }}">Users</a>
+                     <a {% if request.endpoint== 'workstations' %} class='top-nav-link is-active' {% else %} class='top-nav-link' {% endif %} href="{{
+                url_for('workstations') }}">Workstations</a>
+           <a {% if request.endpoint== 'servers' %} class='top-nav-link is-active' {% else %} class='top-nav-link' {% endif %} href="{{
+                url_for('servers') }}">License Servers</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- banner -->
+  <div class="panel panel-dark-blue trailer-half">
+    <div class="grid-container">
+      <div class="column-24">
+       <h1 class="sub-nav-title text-white">{% block banner %}{% endblock %}</h1>
+        <!-- title needs to go in here, but be white and centered -->
+
+      </div>
+    </div>
+  </div>
+
+  <!-- main-content -->
+  <div class="grid-container">
+  {% block content %}{% endblock %}
+  </div>
+
+</div>
+
+
+
+<div class="footer" role="contentinfo">
+  <div class="grid-container">
+    <!-- footer section 1 -->
+    <div class="column-27">
+      <h6 class="font-size-1">&copy 2017 NYC DOHMH</h6>
+      <ul class="list-plain">
+        <li><span class="icon-ui-contact"></span><a class="link-off-black" href="#">Contact Administrator</a></li>
+        <li><span class="icon-ui-globe"></span><a class="link-off-black" href="#">GIS Center Homepage</a></li>
+      </ul>
+    </div>
+
+
+
+    {% block footer %}{% endblock %}
+  </div>
+
+    <!-- get calcite-web js from the cdn (use latest version) -->
+    <script src="/static/js/libs/calcite-web.min.js"></script>
+    <!-- interactive patterns need to be initialized -->
+    <script>
+       calcite.init()
+    </script>
+  </body>
+</html>

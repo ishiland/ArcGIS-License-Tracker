@@ -1,0 +1,85 @@
+{% extends 'layouts/main.html' %}
+
+{% block title %} Products {% endblock %}
+
+{% block javascript %}{% endblock %}
+
+{% block banner %} Products {% endblock %}
+
+{% block content %}
+
+    <!--Product Availability -->
+    <div class="grid-container trailer-1">
+        <div class="loader is-active padding-leader-3 padding-trailer-3">
+            <div class="loader-bars"></div>
+            <div class="loader-text">Loading...</div>
+        </div>
+
+        {% if servers %}
+            <script>$(".loader").hide()</script>
+            <div class="modifier-class js-tab-group">
+
+                <nav class="tab-nav">
+                    {% for s in servers %}
+                        {% if loop.index == 1 %}
+                            <a class="tab-title js-tab is-active" href="#">{{ s.name }} </a>
+                        {% else %}
+                            <a class="tab-title js-tab" href="#">{{ s.name }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </nav>
+                <section class="tab-contents" id="products-available">
+                    {% for s in servers %}
+                        {% if loop.index == 1 %}
+                            <div class="tab-section js-tab-section is-active" id="{{ s.name | trim  }}">
+                            <div class="card card-bar-dark-blue trailer-1">
+                                <div class="font-size-1 card-header leader-half" style="text-align: center">Core
+                                    Products
+                                </div>
+                                <div class="core-products"></div>
+                            </div>
+
+                                <div class="card card-bar-dark-blue trailer-1">
+                                <div class="font-size-1 card-header leader-half" style="text-align: center">Extension
+                                    Products
+                                </div>
+                                <div class="ext-products"></div>
+                                </div>
+
+                                <div class="loader is-active padding-leader-3 padding-trailer-3">
+                                    <div class="loader-bars"></div>
+                                    <div class="loader-text">Loading...</div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="tab-section js-tab-section" id="{{ s.name | trim }}">
+                            <div class="card card-bar-dark-blue trailer-1">
+                                <div class="font-size-1 card-header leader-half" style="text-align: center">Core
+                                    Products
+                                </div>
+                                <div class="core-products"></div>
+                            </div>
+
+                                <div class="card card-bar-dark-blue trailer-1">
+                                <div class="font-size-1 card-header leader-half" style="text-align: center">Extension
+                                    Products
+                                </div>
+                                <div class="ext-products"></div>
+                                </div>
+
+                                <div class="loader is-active padding-leader-3 padding-trailer-3">
+                                    <div class="loader-bars"></div>
+                                    <div class="loader-text">Loading...</div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </section>
+            </div>
+        {% else %}
+            <script>$(".loader").hide()</script>
+            <div>No license servers found.</div>
+
+        {% endif %}
+    </div>
+{% endblock %}

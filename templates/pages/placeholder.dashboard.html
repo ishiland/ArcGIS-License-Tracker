@@ -1,0 +1,115 @@
+{% extends 'layouts/main.html' %}
+
+{% block title %} Dashboard {% endblock %}
+
+{% block javascript %}{% endblock %}
+
+{% block banner %} Dashboard {% endblock %}
+
+{% block content %}
+
+<!-- Top row -->
+<div class="block-group block-group-4-up tablet-block-group-2-up phone-block-group-1-up dashbuttons">
+
+    <!--Active User Count-->
+    <div class="card card-bar-green block trailer-1 card-hover">
+    <a href="{{url_for('users') }}">
+            <div class="card-content">
+                <div class="trailer-half">
+                    <span class="icon-ui-user icon-ui-green font-size-7"></span>
+                    <span class="text-right font-size-7">{% if active_user_count %}{{ active_user_count}}{% else %}
+                        0{% endif %}</span>
+                </div>
+                <div class="font-size-2">{{ pluralize(active_user_count, 'Active User') }}</div>
+            </div>
+     </a>
+    </div>
+
+
+    <!--Total User Count-->
+    <div class="card card-bar-orange block trailer-1 card-hover">
+        <a href="{{url_for('users') }}">
+            <div class="card-content">
+                <div class="trailer-half">
+                    <span class="icon-ui-group icon-ui-orange font-size-7"></span>
+                    <span class="text-right font-size-7">{% if user_count %}{{ user_count }}{% else %}
+                        0{% endif %}</span>
+                </div>
+            <div class="font-size-2">{{ pluralize(user_count, 'Total User') }}</div>
+            </div>
+        </a>
+    </div>
+
+
+    <!--Workstation Count-->
+    <div class="card card-bar-blue block trailer-1 card-hover">
+    <a href="{{url_for('workstations') }}">
+            <div class="card-content">
+                <div class="trailer-half">
+                    <span class="icon-ui-dock-bottom icon-ui-blue font-size-7"></span>
+                    <span class="text-right font-size-7">{% if workstation_count %}{{ workstation_count }}{% else %}
+                        0{% endif %}</span>
+                </div>
+            <div class="font-size-2">{{ pluralize(workstation_count, 'Total Workstation') }}</div>
+            </div>
+    </a>
+    </div>
+
+
+    <!--License Server Count-->
+    <div class="card card-bar-purple block trailer-1 card-hover">
+        <a href="{{url_for('servers') }}">
+            <div class="card-content">
+                <div class="trailer-half">
+                    <span class="icon-ui-settings2 icon-ui-purple font-size-7"></span>
+                    <span class="text-right font-size-7">{% if servers %}{{ servers|length }}{% else %}
+                        0{% endif %}</span>
+                </div>
+            <div class="font-size-2">{{ pluralize(servers|length, 'License Server') }}</div>
+            </div>
+        </a>
+    </div>
+    <!-- End row -->
+</div>
+
+
+<!--Product Availability -->
+<div class="card card-bar-dark-blue trailer-1">
+    <header class="sub-nav" role="banner">
+        <div class="grid-container">
+            <div class="font-size-1 card-header trailer-half" id="tabs">Product Availability</div>
+            {% if servers %}
+            <div class="modifier-class js-tab-group ">
+                <nav class="tab-nav">
+                    {% for s in servers %}
+                    {% if loop.index == 1 %}
+                    <a class="tab-title js-tab is-active" href="#">{{ s.name }} </a>
+                    {% else %}
+                    <a class="tab-title js-tab" href="#">{{ s.name }}</a>
+                    {% endif %}
+                    {% endfor %}
+                </nav>
+                <section class="tab-contents" id="products-available">
+                    {% for s in servers %}
+                    {% if loop.index == 1 %}
+                    <div class="tab-section js-tab-section is-active" id="{{ s.name | trim }}">
+                        <div class="core-products"></div>
+                        <img src="/static/images/loader-ie9.gif" class="loader">
+                    </div>
+                    {% else %}
+                    <div class="tab-section js-tab-section" id="{{ s.name | trim }}">
+                    <div class="core-products"></div>
+                        <img src="/static/images/loader-ie9.gif" class="loader">
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </section>
+            </div>
+            {% else %}
+            <div>No license servers found.</div>
+            {% endif %}
+        </div>
+    </header>
+</div>
+{% endblock %}
+

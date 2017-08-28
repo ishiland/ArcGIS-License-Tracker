@@ -1,0 +1,155 @@
+{% extends 'layouts/main.html' %}
+
+{% block title %} Users {% endblock %}
+{% block banner %}
+    <a href="{{ url_for('users') }}" style="color:inherit">Users</a> / {{ request.path.split('/')[-1] }}
+{% endblock %}
+{% block content %}
+    <div class="column-16">
+        <div class="card block trailer-half">
+            <div class="panel modifier-class">
+                <div class="panel-header">Product Usage</div>
+                {% if product_usage %}
+                    <table class="modifier-class display sortable-table" id="user-products" cellspacing="0"
+                           width="100%">
+                        <thead>
+                        <tr>
+                            <th data-sort="string">Active</th>
+                            <th data-sort="string">Product</th>
+                            <th data-sort="string">License Server</th>
+                            <th data-sort="string">Type</th>
+                            <th data-sort="int">Total Time (min)</th>
+                            <th data-sort="string">Last Use</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for p in product_usage %}
+                            <tr>
+                                {% if p[4] == 'Y' %}
+                                    <td><span class="icon-ui-check-mark icon-ui-green font-size-1"></span></td>
+                                {% else %}
+                                    <td></td>
+                                {% endif %}
+                                <td>
+                                    <a href="{{ url_for('productname',servername=p[1], productname=p[0]) }}">{{ p[0] | replace('-',' ') }}</a>
+                                </td>
+                                <td><a href="{{ url_for('servername', servername=p[1]) }}">{{ p[1] }}</a></td>
+                                <td>{{ p[2] }}</td>
+                                <td>{{ p[3] }}</td>
+                                <td>{{ p[5] }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    </tbody>
+                {% else %}
+                    No product usage found.
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="column-8">
+{#        <div class="card block trailer-half">#}
+{#            <div class="panel modifier-class">#}
+{#                <div class="panel-header">Core Product Usage</div>#}
+{#                {% if piechart %}#}
+                    {#                    <div style="width:250px">#}
+{#                    <canvas id="user-chart" width="200" height="200"></canvas>#}
+                    {#                    </div>#}
+{#                    <script>#}
+{#                        var pieData = {#}
+{#                            labels: [],#}
+{#                            datasets: [{#}
+{#                                label: "Product Usage",#}
+{#                                backgroundColor: palette('tol', '{{ piechart | length }}').map(function (hex) {#}
+{#                                    return '#' + hex;#}
+{#                                }),#}
+{#                                data: []#}
+{#                            }#}
+{#                            ]#}
+{#                        };#}
+{#                        {% for item in piechart %}#}
+{#                            pieData.labels.push('{{ item[0] | replace('-', ' ') }}');#}
+{#                            pieData.datasets[0].data.push('{{ item[1] }}');#}
+{#                        {% endfor %}#}
+{#                        var ctx = document.getElementById("user-chart").getContext("2d");#}
+{#                        new Chart(ctx, {#}
+{#                            type: 'pie',#}
+{#                            data: pieData,#}
+{#                            options: {#}
+{#                                responsive: true,#}
+{#                                legend: {display: true},#}
+{#                                maintainAspectRatio: true,#}
+{#                                multiTooltipTemplate: "<%=datasetLabel%> : <%= value %> min.",#}
+{#                                tooltips: {#}
+{#                                    callbacks: {#}
+{#                                        label: function (tooltipItem, data) {#}
+{#                                            var allData = data.datasets[tooltipItem.datasetIndex].data;#}
+{#                                            var tooltipLabel = data.labels[tooltipItem.index];#}
+{#                                            var tooltipData = allData[tooltipItem.index];#}
+{#                                            var total = 0;#}
+{#                                            for (var i in allData) {#}
+{#                                                total += allData[i];#}
+{#                                            }#}
+{#                                            console.log(tooltipData, total);#}
+{#                                            var tooltipPercentage = Math.round((tooltipData / total) * 100);#}
+{#                                            return tooltipLabel + ': ' + tooltipData + ' min.' + ' (' + tooltipPercentage + '%)';#}
+{#                                        }#}
+{#                                    }#}
+{#                                }#}
+{#                            }#}
+{#                        });#}
+{#                    </script>#}
+{#                {% else %}#}
+{#                    <p>No data to show.</p>#}
+{#                {% endif %}#}
+{#            </div>#}
+{#        </div>#}
+        <div class="card block trailer-half">
+            <div class="panel modifier-class">
+                <div class="panel-header">License Server Usage</div>
+                {% if license_server_usage %}
+                    <table class="modifier-class display sortable-table" id="user-server" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th data-sort="string">Server</th>
+                            <th data-sort="int">Total Time (min)</th>
+                        </tr>
+                        </thead>
+                        {% for l in license_server_usage %}
+                            <tr>
+                                <td><a href="{{ url_for('servername', servername=l[0]) }}">{{ l[0] }}</a></td>
+                                <td>{{ l[1] }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p>No license server history.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card block trailer-half">
+            <div class="panel modifier-class">
+                <div class="panel-header">Workstations</div>
+                {% if workstations %}
+                    <table class="modifier-class display sortable-table" id="user-workstation" cellspacing="0"
+                           width="100%">
+                        <thead>
+                        <tr>
+                            <th data-sort="string">Workstation</th>
+                            <th data-sort="int">Total Time (min)</th>
+                        </tr>
+                        </thead>
+                        {% for w in workstations %}
+                            <tr>
+                                <td><a href="{{ url_for('workstationname', workstationname=w[0]) }}">{{ w[0] }}</a></td>
+                                <td>{{ w[1] }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p>No license workstation history.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,136 @@
+{% extends 'layouts/main.html' %}
+
+{% block title %} Products {% endblock %}
+{% block javascript %}
+<script type="text/javascript" src="/static/js/chartjs/Chart.bundle.js"></script>
+{% endblock %}
+
+{% block banner %}
+    <a href="{{ url_for('products') }}" style="color:inherit">Products</a> /
+    <a href="{{ url_for('servername',servername=request.path.split('/')[-2]) }}"
+       style="color:inherit">{{ request.path.split('/')[-2] }}</a> /
+    {{ request.path.split('/')[-1] | replace('-', ' ') }}
+{% endblock %}
+{% block content %}
+    <div class="grid-container">
+        <div class="column-24">
+            <div class="card block trailer-1">
+                <div class="panel modifier-class">
+                    <div class="panel-header">Usage History</div>
+                    {% if chart_data %}
+                        {% if chart_data|length == 0 %}
+                            <em>Not Available</em>
+                        {% else %}
+                            <canvas id="product-chart" width="700" height="150"></canvas>
+                            <script>
+                                var lineData = {
+                                    labels: [],
+                                    datasets: [
+                                        //total license availability
+                                        {
+                                            backgroundColor: 'transparent',
+                                            borderColor: 'rgba(255, 0, 0, .5)',
+                                            data: []
+                                        },
+                                        // unique users
+                                        {
+                                            borderColor: "#3699ff",
+                                            backgroundColor: "rgba(54, 153, 255, .5)",
+                                            data: []
+                                        }
+                                    ]
+                                };
+                                {% for item in chart_data %}
+                                    lineData.labels.push('{{item[3][0:3]}}, ' + '{{item[4][0:3]}}' + ' {{item[5]}}');
+                                    lineData.datasets[1].data.push({{item[1]}});
+                                    lineData.datasets[0].data.push({{item[2]}});
+                                {% endfor %}
+                                var ctx = document.getElementById("product-chart").getContext("2d");
+                                var myLineChart = new Chart(ctx, {
+                                    type: 'line',
+                                    data: lineData,
+                                    options: {
+                                        tooltips: {
+                                            mode: 'index',
+                                            intersect: false
+                                        },
+                                        scales: {
+                                            yAxes: [{
+                                                ticks: {
+                                                    min: 0,
+                                                    max: Math.max.apply(Math, lineData.datasets[1].data) + 1,
+                                                    stepSize: 1
+                                                }
+                                            }]
+                                        }
+                                    }
+                                });
+                                myLineChart.legend.legendItems[1].text = 'Daily Unique Users';
+                                myLineChart.legend.legendItems[0].text = 'Total Licenses';
+                            </script>
+
+                        {% endif %}
+                    {% else %}
+                        <em>Not Available</em>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="column-18">
+            <div class="card block trailer-half">
+                <div class="panel modifier-class">
+                    <div class="panel-header">All User History</div>
+                    {% if usage %}
+                        <table class="modifier-class display sortable-table" id="product-users" cellspacing="0"
+                               width="100%">
+                            <thead>
+                            <tr>
+                                <th data-sort="string">Active</th>
+                                <th data-sort="string">User</th>
+                                <th data-sort="int">Total Time (min)</th>
+                                <th data-sort="string">Last Use</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for u in usage %}
+                                <tr>
+                                    {% if u[2] == 'Y' %}
+                                        <td><span class="icon-ui-check-mark icon-ui-green font-size-1"></span></td>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <td>
+                                        <a href="{{ url_for('username', username=u[0]) }}">{{ u[0] | replace('-',' ') }}</a>
+                                    </td>
+                                    <td>{{ u[1] }}</td>
+                                    <td>{{ u[3] }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                        </tbody>
+                    {% else %}
+                        No user usage found.
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="column-6">
+            <div class="card block trailer-half">
+                <div class="panel">
+                    <div class="panel-header">Product Info</div>
+                    {% if info %}
+                        <span class="strong">Common Name:</span>  {{ info[0] | replace('-',' ') }}<br>
+                        <span class="strong">Internal Name:</span>  {{ info[1] }} <br>
+                        <span class="strong">Category:</span>  {{ info[2] | replace('-',' ') }} <br>
+                        <span class="strong">Type:</span>  {{ info[3] }} <br>
+                        <span class="strong">Licenses Out:</span>  {{ info[4] }}<br>
+                        <span class="strong">Total Licenses:</span>  {{ info[5] }}
+                    {% else %}
+                        No info available.
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

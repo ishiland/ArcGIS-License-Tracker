@@ -1,0 +1,57 @@
+{% extends 'layouts/main.html' %}
+
+{% block title %} Workstations {% endblock %}
+{% block banner %}
+    Workstations
+{% endblock %}
+{% block content %}
+    <div class="grid-container">
+    <div class="card block trailer-1">
+        <div class="panel">
+            <div class="panel-header">All Workstations</div>
+            <div class="loader is-active padding-leader-3 padding-trailer-3">
+                <div class="loader-bars"></div>
+                <div class="loader-text">Loading...</div>
+            </div>
+            {% if ws %}
+                <table class="modifier-class table-striped display" id="ws-table" cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    <th>Active</th>
+                    <th>Workstation</th>
+                    <th>Total Time (min.)</th>
+                    <th>Join Date</th>
+                </tr>
+                </thead>
+                <script>$(".loader").hide()</script>
+                <tbody>
+                {% for w in ws %}
+                    <tr class='clickable-row' data-href="{{ url_for('workstationname', workstationname=w.name) }}">
+                        {% if w.active == 'Y' %}
+                            <td><span class="icon-ui-check-mark icon-ui-green font-size-1"></span></td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        <td>{{ w.name }}</td>
+                        {% if w.time_sum %}
+                            <td>{{ w.time_sum }}</td>
+                        {% else %}
+                            <td>0</td>
+                        {% endif %}
+                        {% if w.join_date %}
+                            <td>{{ w.join_date.strftime('%Y-%m-%d') }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            {% else %}
+                <script>$(".loader").hide()</script>
+                No Workstation Data.
+            {% endif %}
+            </table>
+        </div>
+    </div>
+    </div>
+{% endblock %}
