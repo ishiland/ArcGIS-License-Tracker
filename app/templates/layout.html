@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <title>FlexLM License Monitor - {% block title %}{% endblock %}</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/calcite-web.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.dataTables.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.dataTables.min.css') }}">
+    {% block css %}{% endblock %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/jquery-1.11.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/libs/jquery-ui-1.12.1/jquery-ui.min.js') }}"></script>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/dataTables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/dataTables.buttons.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/jszip.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/pdfmake.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/vfs_fonts.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/buttons.html5.min.js') }}"></script>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/stupidtable.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/aWapBE.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/moment.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/humanize-duration.js') }}"></script>
+    {% block javascript %}{% endblock %}
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/selectivizr.js') }}"></script>
+      <!--<script type="text/javascript" src="{{ url_for('static', filename='js/libs/html5shiv.js') }}"></script>-->
+    <![endif]-->
+    <script type=text/javascript>
+        $SCRIPT_ROOT = {{ request.script_root | tojson | safe }};
+    </script>
+</head>
+
+<body>
+<div class="wrapper">
+    <!-- top navigation -->
+    <header class="top-nav">
+        <div class="grid-container">
+            <div class="column-24">
+                <a href="{{ url_for('dashboard') }}" class="top-nav-title">FlexLM License Monitor</a>
+
+                <nav class="top-nav-list" role="navigation" aria-labelledby="topnav">
+                    <a {% if request.endpoint== 'dashboard' %} class='top-nav-link is-active' {% else %}
+                    class='top-nav-link' {% endif %}
+                    href="{{ url_for('dashboard') }}">Dashboard</a>
+                    <a {% if request.endpoint== 'users' %} class='top-nav-link is-active' {% else %}
+                    class='top-nav-link' {% endif %}
+                    href="{{ url_for('users') }}">Users</a>
+                    <a {% if request.endpoint== 'workstations' %} class='top-nav-link is-active' {% else %}
+                    class='top-nav-link' {% endif %}
+                    href="{{ url_for('workstations') }}">Workstations</a>
+                    <a {% if request.endpoint== 'servers' %} class='top-nav-link is-active' {% else %}
+                    class='top-nav-link' {% endif %}
+                    href="{{ url_for('servers') }}">License Servers</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- banner -->
+    <div class="panel panel-dark-blue trailer-half">
+        <div class="grid-container">
+            <div class="column-24">
+                <h1 class="sub-nav-title text-white">{% block banner %}{% endblock %}</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- main-content -->
+    <div class="grid-container">
+        {% block content %}{% endblock %}
+    </div>
+</div>
+
+
+<div class="footer" role="contentinfo">
+    <div class="grid-container">
+        <!-- footer section 1 -->
+        <div class="column-27">
+            <h6 class="font-size-1">&copy 2018 YOUR COMPANY</h6>
+            <ul class="list-plain">
+                <li class="font-size--3">Developed by <a href="https://github.com/ishiland">Ian Shiland</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- calcite-web js  -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/libs/calcite-web.min.js') }}"></script>
+<!-- interactive patterns need to be initialized -->
+<script>
+    calcite.init();
+    calcite.modal();
+</script>
+</body>
+</html>

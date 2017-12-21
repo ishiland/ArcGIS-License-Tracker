@@ -1,0 +1,169 @@
+/**
+ * @file
+ * Main stylesheet file.
+ */
+
+/*****************************************************************************
+ * Main elements
+ ****************************************************************************/
+html {
+    overflow-y: scroll;
+}
+
+a {
+    cursor: pointer;
+}
+
+::selection {
+    background: #555;
+    color: #FFF;
+}
+
+::-moz-selection {
+    background: #555;
+    color: #FFF;
+}
+
+::-webkit-selection {
+    background: #555;
+    color: #FFF;
+}
+
+/* Main elements end */
+
+/*****************************************************************************
+ * Various other styles
+ ****************************************************************************/
+
+.panel-header {
+    border-bottom: 1px solid gray;
+    font-size: x-large;
+    margin-bottom: 20px;
+}
+
+.card-header {
+    padding: 5px 10px;
+    color: #004575;
+    background-color: #d1dbe6;
+    margin-top: 0;
+}
+
+.loader {
+    display: block;
+    margin: auto;
+}
+
+.dashbuttons a {
+    text-decoration: none;
+    color: rgb(73, 73, 73);
+}
+
+div.card-hover a {
+    text-decoration: none !important
+}
+
+div.card-hover {
+    color: #4e4e4e;
+    text-decoration: none;
+}
+
+div.card-hover:hover {
+    color: #4e4e4e;
+    background-color: white;
+    text-decoration: none;
+    box-shadow: 0 0 5px 1px #9c9c9c;
+}
+
+div.dt-buttons {
+    margin-left: 50px;
+    padding-top: 26px;
+}
+
+.table-minimum {
+    margin: auto;
+    font-size: small;
+}
+
+.table-minimum tbody tr {
+    background-color: #fff;
+}
+
+.table-minimum tbody td, .table-minimum thead th {
+    border-left: none;
+    border-right: none;
+    padding: 0 10px;
+}
+
+.table-minimum thead {
+    font-size: small;
+}
+
+.table-minimum thead th {
+    font-weight: 600;
+}
+
+.product-table thead th {
+    font-weight: 600;
+}
+
+.product-table {
+    margin-bottom: .02em;
+}
+
+.table-minimum tbody tr:hover {
+    background-color: #fffdf4;
+}
+
+.product-table tbody tr:hover {
+    background-color: #fffdf4;
+}
+
+.product-table tbody td, .product-table thead th {
+    border-left: none;
+    border-right: none;
+     /*text-align: center;*/
+}
+
+.panel-green {
+    color: #0a6100;;
+    background-color: #ddeedb;
+    border-color: #9bc19c;
+}
+
+.panel-yellow {
+    background-color: #f3edc7;
+    border-color: #e4d154;
+}
+
+.hidden-td {
+    padding: 0 0 0 0;
+    box-shadow: 0 0 5px #3699FF;
+    border-collapse: separate;
+    background-color: aliceblue;
+}
+
+.loading-div {
+    text-align: center;
+    padding: 5px;
+}
+
+.text-centered-bold {
+    text-align: center;
+    padding: 15px;
+    background-color: transparent;
+}
+
+
+
+.no-licenses {
+    background-color: #fff9d1
+}
+
+body strong {
+    font-weight: 600;
+}
+
+.product-container{
+    /* overflow: hidden; */
+    height:100%;
+}

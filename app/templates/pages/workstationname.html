@@ -1,0 +1,102 @@
+{% extends 'layout.html' %}
+
+{% block title %} Workstations {% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}
+
+{% block banner %}
+    <a href="{{ url_for('workstations') }}" style="color:inherit">Workstations</a> / {{ request.path.split('/')[-1] }}
+{% endblock %}
+
+{% block content %}
+    <div class="column-16">
+        <div class="panel modifier-class trailer-half">
+            <div class="panel-header">Product Usage</div>
+            {% if products %}
+                    <table class="modifier-class display sortable-table" id="user-products" cellspacing="0"
+                           width="100%">
+                        <thead>
+                        <tr>
+                            <th data-sort="string">Last Use</th>
+                            <th data-sort="string">Product</th>
+                            <th data-sort="string">Type</th>
+                            <th data-sort="int">Total Time</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for p in products %}
+                            <tr>
+                                {% if not p.time_in %}
+                                    <td><span class="icon-ui-check-mark icon-ui-green font-size-1"> Active</span></td>
+                                {% else %}
+                                    <td>{{ p.time_in | relative_time }}</td>
+                                {% endif %}
+                                <td>{{ p.common_name | replace("-", " ")}}</td>
+                                <td>{{ p.type }}</td>
+                                <td>{{ p.time_sum | delta_time}}</td>
+                            </tr>
+                        {% endfor %}
+                                            </tbody>
+                    </table>
+            {% else %}
+                No product usage found.
+            {% endif %}
+        </div>
+    </div>
+    <div class="column-8">
+        <div class="panel modifier-class trailer-half">
+            <div class="panel-header">License Server Usage</div>
+            {% if servers %}
+                <table class="modifier-class display sortable-table" id="ws-server" cellspacing="0" width="100%">
+                    <thead>
+                    <tr>
+                        <th data-sort="string">Server</th>
+                        <th data-sort="int">Last Use</th>
+                    </tr>
+                    </thead>
+                    {% for s in servers %}
+                        <tr>
+                            <td><a href="{{ url_for('servername', servername=s.Server.name) }}">{{ s.Server.name }}</a></td>
+                                {% if s.time_in == None %}
+                                <td><span class="icon-ui-check-mark icon-ui-green font-size-1">Active</span></td>
+                                {% else %}
+                                <td>{{ s.time_in | relative_time }}</td>
+                                {% endif %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p>No license server history.</p>
+            {% endif %}
+        </div>
+
+        <div class="panel modifier-class trailer-half">
+            <div class="panel-header">Users</div>
+            {% if users %}
+                <table class="modifier-class display sortable-table" id="ws-workstation" cellspacing="0" width="100%">
+                    <thead>
+                    <tr>
+                        <th data-sort="string">User</th>
+                        <th data-sort="int">Last Use</th>
+                    </tr>
+                    </thead>
+                    {% for u in users %}
+                        <tr>
+                            <td><a href="{{ url_for('username', username=u.name) }}">{{ u.name }}</a></td>
+                                {% if u.time_in == None %}
+                                <td><span class="icon-ui-check-mark icon-ui-green font-size-1">Active</span></td>
+                                {% else %}
+                                <td>{{ u.time_in | relative_time }}</td>
+                                {% endif %}                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p>No license workstation history.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
