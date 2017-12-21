@@ -78,3 +78,4 @@ Flask can be deployed to a number of self-hosted production web servers. Instruc
 ## Screenshots
 
 ![Dashboard](https://ishiland.github.io/flexlm-flask/screenshots/dashboard.png)
+![Product](https://ishiland.github.io/flexlm-flask/screenshots/product.png)
