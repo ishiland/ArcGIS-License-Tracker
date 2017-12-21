@@ -1,7 +1,8 @@
 import datetime
 from app import db
-from sqlalchemy import inspect
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.ext.declarative import DeclarativeMeta
+import json
 
 
 class Server(db.Model):
@@ -12,6 +13,9 @@ class Server(db.Model):
     def __init__(self, name, port):
         self.name = name
         self.port = port
+
+    def __repr__(self):
+        return '<Server %r>' % self.name
 
     @staticmethod
     def upsert(s):
@@ -40,6 +44,9 @@ class Updates(db.Model):
         self.server_id = server_id
         self.status = status
         self.info = info
+
+    def __repr__(self):
+        return '<Updates %r>' % self.id
 
     @staticmethod
     def start(server_id):
@@ -78,6 +85,9 @@ class Product(db.Model, ):
         self.internal_name = internal_name
         super(Product, self).__init__(**kwargs)
 
+    def __repr__(self):
+        return '<Product %r>' % self.common_name
+
     @staticmethod
     def reset(server_id):
         db.session.query(Product).filter_by(server_id=server_id).update({"license_out": 0})
@@ -107,6 +117,9 @@ class Workstation(db.Model):
     def __init__(self, name):
         self.name = name
 
+    def __repr__(self):
+        return '<Workstation %r>' % self.name
+
     @staticmethod
     def add(workstation):
         w = db.session.query(Workstation).filter_by(name=workstation).first()
@@ -123,6 +136,9 @@ class User(db.Model):
 
     def __init__(self, name):
         self.name = name
+
+    def __repr__(self):
+        return '<User %r>' % self.name
 
     @staticmethod
     def add(username):
@@ -142,8 +158,7 @@ class User(db.Model):
     def distinct_users():
         return db.session.query(User.name).distinct().all()
 
-    def __repr__(self):
-        return '<User %r>' % (self.name)
+
 
 
 class History(db.Model):
@@ -166,6 +181,9 @@ class History(db.Model):
         self.update_id = update_id
         self.time_out = time_out
         self.time_in = time_in
+
+    def __repr__(self):
+        return '<History %r>' % self.id
 
     @hybrid_property
     def calculated_timein(self):
@@ -215,17 +233,11 @@ class History(db.Model):
                                                                           server_id=server_id).all()
         return query
 
-def object_as_dict(obj):
-    return {c.key: getattr(obj, c.key)
-            for c in inspect(obj).mapper.column_attrs}
 
 
 # ----------------------------------------------------------------------------#
 # Jsonify results
 # ----------------------------------------------------------------------------#
-from sqlalchemy.ext.declarative import DeclarativeMeta
-import json
-
 class AlchemyEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj.__class__, DeclarativeMeta):
@@ -242,4 +254,3 @@ class AlchemyEncoder(json.JSONEncoder):
             return fields
 
         return json.JSONEncoder.default(self, obj)
-

@@ -8,7 +8,7 @@ UPDATE_INTERVAL = 5
 
 # license server names and ports. Default port is 27000.
 license_servers = [
-    {"name": "MY-LICENSE-SERVER", "port": "27000"}
+    {"name": "MY-LICENSE-SERVER", "port": "27000"},
     # {"name": "MY-2ND-LICENSE-SERVER", "port": "27000"}
 ]
 
