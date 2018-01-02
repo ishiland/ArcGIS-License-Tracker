@@ -3,8 +3,6 @@ from datetime import datetime
 from app.models import Product, Updates, User, History, Server, Workstation
 from app.toolbox.lm_config import license_servers, lm_util, products
 
-year = datetime.now().year
-
 
 def check_year(server_id):
     """
@@ -14,7 +12,7 @@ def check_year(server_id):
     """
     checked_out = History.time_in_none(server_id)
     for r in checked_out:
-        if year != r.time_out.year:
+        if datetime.now().year != r.time_out.year:
             Product.reset(server_id)
             History.reset(server_id)
             break
@@ -37,6 +35,7 @@ def run():
     Entry point for updating licenses. This script can optionally be run stand alone (cron job or windows task scheduler).
     Relies on the lmutil.exe to collect server information.
     """
+
     checked_out_history_ids = []
     error = False
     try:
@@ -114,7 +113,7 @@ def run():
                             t = cols[-1]
                             hour = t.split(":")[0]
                             min = t.split(":")[1]
-                            date_4_db = datetime(year, int(month), int(day), int(hour), int(min))
+                            date_4_db = datetime(datetime.now().year, int(month), int(day), int(hour), int(min))
                             workstation_id = Workstation.add(workstation=computer)
                             user_id = User.add(username=user)
                             product_id = Product.query(val['internal-name'], server_id)
