@@ -89,7 +89,8 @@ def productname(servername, productname, days=3):
         filter(models.History.time_out > days). \
         filter(models.Product.common_name == productname). \
         distinct(models.History.user_id). \
-        group_by(models.Product.common_name, models.Server.name, 'm', 'd', 'y').all()
+        group_by(models.Product.common_name, models.Server.name, 'm', 'd', 'y'). \
+        order_by(desc('y')).order_by(desc('m')).order_by(desc('d')).all()
 
     info = db.session.query(models.Product). \
         filter(models.Server.id == models.Product.server_id). \
@@ -118,7 +119,8 @@ def productchart():
         filter(models.History.time_out > days). \
         filter(models.Product.common_name == productname). \
         distinct(models.History.user_id). \
-        group_by(models.Product.common_name, models.Server.name, 'm', 'd', 'y').all()
+        group_by(models.Product.common_name, models.Server.name, 'm', 'd', 'y'). \
+        order_by(desc('y')).order_by(desc('m')).order_by(desc('d')).all()
     return jsonify(result=chart_data)
 
 
@@ -167,14 +169,6 @@ def username(username):
 
 @app.route('/servers')
 def servers():
-    # servers = db.session.query(models.Server.name, models.Updates.status,
-    #                            func.max(models.Updates.time_complete).label('max_time')). \
-    #     filter(models.Workstation.id == models.History.workstation_id). \
-    #     filter(models.Updates.id == models.History.update_id). \
-    #     filter(models.Server.id == models.Updates.server_id). \
-    #     distinct(models.Server.name).group_by(models.Server.name). \
-    #     order_by(func.max(models.Updates.time_complete).desc()).all()
-
     subq = db.session.query(
         models.Server.name,
         func.max(models.Updates.time_complete).label('maxdate')
