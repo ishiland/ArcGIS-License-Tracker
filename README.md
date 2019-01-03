@@ -7,6 +7,9 @@ Data is collected over time for a current and historical perspective of license 
 
 This tool is intended to be used for tracking Esri ArcGIS concurrent use licenses but may also be adaptable to other Flexera licensed applications.
 
+### Script and Database Models only
+
+Check out the [scripts-n-schema](https://github.com/ishiland/flexlm-flask/tree/script-n-schema) branch for a stripped down version of this project which only includes the script and database schema to collect license usage.
 
 ## Features
  * [Flask](http://flask.pocoo.org/)
@@ -70,10 +73,6 @@ Tip:
 ## Deploy to production
 Flask can be deployed to a number of self-hosted production web servers. Instructions on how to do this are located [here](http://flask.pocoo.org/docs/0.12/deploying/).
 
-
-## Credits
- * [Flask Boilerplate](https://github.com/MaxHalford/flask-boilerplate)
- * [ESRI Calcite Web](https://esri.github.io/calcite-web/)
 
 ## Screenshots
 
