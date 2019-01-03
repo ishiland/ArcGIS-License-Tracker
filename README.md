@@ -1,81 +1,41 @@
-FlexLM Flask
-============
+FlexLM - Script and Schema
+================================
+This branch contains only the database models and script to collect license information from a Flexera license manager using the `lmutil.exe`.
 
-FlexLM Flask collects and displays license information from a Flexera license manager using the `lmutil.exe`. It can be used to assess licensed product usage, inventory users and computers, and monitor license servers.
-
-Data is collected over time for a current and historical perspective of license usage.
-
-This tool is intended to be used for tracking Esri ArcGIS concurrent use licenses but may also be adaptable to other Flexera licensed applications.
-
+The resulting database can be used in a web application or queried using a tool like [DB Browser for SQL Lite](https://sqlitebrowser.org/)
 
 ## Features
- * [Flask](http://flask.pocoo.org/)
- * [SQLAlchemy](https://www.sqlalchemy.org/)
- * [SQLite](https://www.sqlite.org/)
- * [Apscheduler](https://apscheduler.readthedocs.io/en/latest/) for syncing license data as a background task.
- * [ChartJs](http://www.chartjs.org/) for product visualization.
- * [MomentJS](https://momentjs.com/) and [humanize-duration.js](https://evanhahn.github.io/HumanizeDuration.js/) for time display.
+ * Get current and historically perspectives on license usage by User, Workstation or License Server
+ * Supports multiple license servers
 
 ## Requirements
- * Developed with Python 3.6. This app may work with older versions of python although they have not been tested.
  * `lmutil.exe` included with your license server manager.
+ * python 3
 
 ## Getting Started
 
-1. Clone the repo
+1. Clone the repo and checkout this branch
   ```
   > git clone https://github.com/ishiland/flexlm-flask.git
   > cd flexlm-flask
+  > git checkout script-n-schema
   ```
 
-2. Initialize and activate a virtualenv:
-  ```
-  > python -m virtualenv venv
-  > venv\Scripts\activate
-  ```
 
-3. Install the dependencies:
+2. Setup a virtual environment (optional), then install the dependencies:
   ```
   > pip install -r requirements.txt
   ```
   
-4. In `app/toolbox/lm_config.py`, configure the following:
-  * `UPDATE_INTERVAL` - Frequency to collect license data. Default is 5 minutes.
+3. In `config.py`, configure the following:
   * `license_servers` - List of license servers to track. Default port is 27000.
-  * `lm_util` - Path to your lmutil.exe. Default is in the `toolbox` directory.
+  * `lm_util` - Path to your lmutil.exe. Default is the root directory.
   * `products` - List of products to track. Comment/uncomment those applicable to your organization, default may work for most.
     
-5. Initialize the database:
+4. test your configuration and do a first read of your license server:
   ```
-  > python manage.py initdb
+  > python read.py
   ```
+Any issues should be written to the log file.
 
-6. Test your license server configuration:
-  ```
-  > python manage.py read
-  ```
-
-
-7. Run the development server:
-  ```
-  > python manage.py runserver
-  ```
-
-8. Navigate to [http://localhost:5000](http://localhost:5000)
-
-
-Tip:
- * A background data-sync task is started when you run the development server, so keep the server running to reflect the most accurate usage information. Ideally this application should be deployed to a production web server. See below for more info.
-
-## Deploy to production
-Flask can be deployed to a number of self-hosted production web servers. Instructions on how to do this are located [here](http://flask.pocoo.org/docs/0.12/deploying/).
-
-
-## Credits
- * [Flask Boilerplate](https://github.com/MaxHalford/flask-boilerplate)
- * [ESRI Calcite Web](https://esri.github.io/calcite-web/)
-
-## Screenshots
-
-![Dashboard](https://ishiland.github.io/flexlm-flask/screenshots/dashboard.png)
-![Product](https://ishiland.github.io/flexlm-flask/screenshots/product.png)
+5. setup as a scheduled task to automate the updates.

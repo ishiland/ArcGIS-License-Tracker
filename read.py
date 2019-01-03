@@ -1,8 +1,16 @@
 import os
+import logging
 from datetime import datetime
-from app.models import Product, Updates, User, History, Server, Workstation
-from app.toolbox.lm_config import license_servers, lm_util, products
+from models import Product, Updates, User, History, Server, Workstation
+from config import license_servers, lm_util, products, LOG_LEVEL, LOG_FILENAME
+from models import base, engine
+from sqlalchemy_utils import database_exists
 
+logging.basicConfig(filename=LOG_FILENAME,
+                    level=LOG_LEVEL,
+                    filemode='a',
+                    format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+                    datefmt='%H:%M:%S' )
 
 def check_year(server_id):
     """
@@ -25,6 +33,7 @@ def reset(uid, sid, e_msg):
     :param sid: Server ID
     :param e_msg: Error message
     """
+    logging.error('There was an error:{}'.format(e_msg))
     Product.reset(sid)
     History.reset(sid)
     Updates.end(uid, 'ERROR', e_msg)
@@ -32,16 +41,15 @@ def reset(uid, sid, e_msg):
 
 def run():
     """
-    Entry point for updating licenses. This script can optionally be run stand alone (cron job or windows task scheduler).
-    Relies on the lmutil.exe to collect server information.
+    Read data from license servers
+    :return: Returns the result of read
     """
-
     checked_out_history_ids = []
-    error = False
+
     try:
 
         for server in license_servers:
-            print('Reading from {} on port {}...'.format(server['name'], server['port']))
+            logging.info('\nReading from {} on port {}...'.format(server['name'], server['port']))
             s = server['name']
             port = server['port']
             info = None
@@ -71,8 +79,7 @@ def run():
                     elif (idx + 1) == len(lm_util_lines) and status is None:
                         raise Exception('No license data from lmutil.exe')
             except Exception as e:
-                reset(update_id, server_id, str(e))
-                error = True
+                reset(update_id, server_id,  str(e))
                 continue
 
             try:
@@ -129,13 +136,26 @@ def run():
 
             except Exception as e:
                 reset(update_id, server_id, str(e))
-                print(e)
-                error = True
                 continue
 
     except Exception as e:
-        error = True
-        print(e)
-    finally:
-        print("Read process finished.")
-        return error
+        logging.error(e)
+
+
+def init():
+    """
+    Entry point for updating licenses. This script can optionally be run stand alone (cron job or windows task scheduler).
+    Relies on the lmutil.exe to collect server information.
+    """
+
+    # create database if it doesnt exist
+    if not database_exists(engine.url):
+        logging.info('Creating Database')
+        base.metadata.create_all(engine)
+
+    # read license servers
+    run()
+    logging.info('Finished reading from license server\n')
+
+if __name__ == '__main__':
+   init()

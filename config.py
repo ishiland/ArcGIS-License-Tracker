@@ -1,14 +1,17 @@
-import os
+import os, logging
+
+SQLALCHEMY_DATABASE_URI = 'sqlite:///licenses.db'
+
+LOG_LEVEL = logging.DEBUG
+
+LOG_FILENAME = 'activity.log'
 
 # Root project folder
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-# Update interval in minutes to read from license server
-UPDATE_INTERVAL = 5
-
 # license server names and ports. Default port is 27000.
 license_servers = [
-    {"name": "MY-LICENSE-SERVER", "port": "27000"},
+    {"name": "gv-gislicense", "port": "27000"},
     # {"name": "MY-2ND-LICENSE-SERVER", "port": "27000"}
 ]
 
