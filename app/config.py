@@ -1,18 +1,39 @@
 import logging
 
-TIMEZONE = 'US/Eastern'
 
-# Secret key for generating tokens
-SECRET_KEY = 'houdini'
+class BaseConfig(object):
+    """Base configuration"""
+    DEBUG = False
+    TESTING = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    DEBUG_TB_ENABLED = False
+    # DEBUG_TB_INTERCEPT_REDIRECTS = False
+    TIMEZONE = 'US/Eastern'
 
-# Database choice
-SQLALCHEMY_DATABASE_URI = 'sqlite:///app.db'
-SQLALCHEMY_TRACK_MODIFICATIONS = False
+    LOG_LEVEL = logging.DEBUG
+    LOG_FILENAME = 'activity.log'
 
-DEBUG = False
+    LOG_MAXBYTES = 20000
+    LOG_BACKUPS = 0
 
-LOG_LEVEL = logging.DEBUG
-LOG_FILENAME = 'activity.log'
+    SECRET_KEY ='houdini'
 
-LOG_MAXBYTES = 20000
-LOG_BACKUPS = 0
+
+class DevelopmentConfig(BaseConfig):
+    """Development configuration"""
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///app_dev.db'
+    """Development configuration"""
+    # DEBUG_TB_TEMPLATE_EDITOR_ENABLED = True
+    DEBUG_TB_ENABLED = True
+    DEBUG = True
+
+
+class TestingConfig(BaseConfig):
+    """Testing configuration"""
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///app_test.db'
+
+
+class ProductionConfig(BaseConfig):
+    """Testing configuration"""
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///app.db'

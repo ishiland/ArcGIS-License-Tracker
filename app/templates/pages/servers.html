@@ -11,27 +11,19 @@
         {% if servers %}
             {% for s in servers %}
                 <div class="card card-wide trailer-1">
-                    {% if s.Updates.status == 'OK' %}
+                    {% if s.status == 'UP' %}
                         <div class="panel server-panel" style="width:100%">
-                            <span class="icon-ui-check-mark icon-ui-green font-size-2">{{ s.Server.name }} </span>
-                            <span class="center-text"> Last updated {{ s.Updates.time_complete | relative_time }}</span>
-                            <a href="{{ url_for('servername', servername=s.Server.name) }}">
-                                <button class="btn modifier-class" style="float: right;"> View Details</button>
-                            </a>
-                        </div>
-                    {% elif s.Updates.status == 'UPDATING' %}
-                        <div class="panel server-panel" style="width:100%">
-                            <span class="icon-ui-refresh icon-ui-green font-size-2">{{ s.Server.name }} </span>
-                            <span class="center-text"> Updating...</span>
-                            <a href="{{ url_for('servername', servername=s.Server.name) }}">
+                            <span class="icon-ui-check-mark icon-ui-green font-size-2">{{ s.name }} </span>
+                            <span class="center-text"> Last updated {{ s.maxdate | relative_time }}</span>
+                            <a href="{{ url_for('servername', servername=s.name) }}">
                                 <button class="btn modifier-class" style="float: right;"> View Details</button>
                             </a>
                         </div>
                     {% else %}
                         <div class="panel server-panel" style="width:100%">
-                            <span class="icon-ui-notice-round icon-ui-orange font-size-2">{{ s.Server.name }} </span>
-                            <span class="center-text"> Last updated {{ s.Updates.time_complete | relative_time }}</span>
-                            <a href="{{ url_for('servername', servername=s.Server.name) }}">
+                            <span class="icon-ui-notice-round icon-ui-orange font-size-2">{{ s.name }} </span>
+                            <span class="center-text"> Last updated {{ s.maxdate | relative_time }}</span>
+                            <a href="{{ url_for('servername', servername=s.name) }}">
                                 <button class="btn modifier-class" style="float: right;"> View Details</button>
                             </a>
                         </div>

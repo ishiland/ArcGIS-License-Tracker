@@ -1,6 +1,7 @@
 from flask import render_template, jsonify, request
 from sqlalchemy import desc, asc, func, extract, and_
-from app import app, models, db
+from app import app, db
+from app.models import User, Product, Server, Updates, History, Workstation, AlchemyEncoder
 import json
 import datetime
 import humanize
@@ -10,12 +11,12 @@ import humanize
 @app.route('/index')
 @app.route('/dashboard')
 def dashboard():
-    servers = db.session.query(models.Server).all()
-    user_count = db.session.query(models.User).count()
-    active_users = db.session.query(models.User).join(models.History).filter(models.History.time_in == None).join(
-        models.Product).filter(
-        models.Product.type == 'core').all()
-    workstation_count = db.session.query(models.Workstation).count()
+    servers = db.session.query(Server).all()
+    user_count = db.session.query(User).count()
+    active_users = db.session.query(User).join(History).filter(History.time_in is None).join(
+        Product).filter(
+        Product.type == 'core').all()
+    workstation_count = db.session.query(Workstation).count()
     return render_template('index.html',
                            servers=servers,
                            active_users=active_users,
@@ -30,11 +31,13 @@ def server_availability():
     :return: Availability of products on a license server.
     """
     s = request.args.get('servername')
-    core = db.session.query(models.Product, models.Server).filter(models.Product.type == 'core'). \
-        filter(models.Product.server_id == models.Server.id).filter(models.Server.name == s).all()
-    ext = db.session.query(models.Product, models.Server).filter(models.Product.type == 'extension'). \
-        filter(models.Product.server_id == models.Server.id).filter(models.Server.name == s).all()
-    return json.dumps(core + ext, cls=models.AlchemyEncoder)
+    core = db.session.query(Product, Server).filter(Product.type == 'core'). \
+        filter(Product.server_id == Server.id).filter(Server.name == s).all()
+    ext = db.session.query(Product, Server).filter(Product.type == 'extension'). \
+        filter(Product.server_id == Server.id).filter(Server.name == s).all()
+    print('core', core)
+    print('ext', ext)
+    return json.dumps(core + ext, cls=AlchemyEncoder)
 
 
 @app.route('/data/product/availability')
@@ -45,57 +48,61 @@ def product_availability():
     """
     sname = request.args.get('servername')
     pname = request.args.get('product')
-    active = db.session.query(models.User.name, models.Workstation.name, models.Product.common_name,
-                              models.History.time_in, models.History.time_out, models.Server.name). \
-        filter(models.User.id == models.History.user_id). \
-        filter(models.Product.id == models.History.product_id). \
-        filter(models.Workstation.id == models.History.workstation_id). \
-        filter(models.Server.id == models.Product.server_id). \
-        filter(models.Product.common_name == pname). \
-        filter(models.Server.name == sname). \
-        filter(models.History.time_in == None).all()
+    print('product', pname)
+    print('servername', sname)
+    active = db.session.query(User.name, Workstation.name, Product.common_name,
+                              History.time_in, History.time_out, Server.name). \
+        filter(User.id == History.user_id). \
+        filter(Product.id == History.product_id). \
+        filter(Workstation.id == History.workstation_id). \
+        filter(Server.id == Product.server_id). \
+        filter(Product.internal_name == pname). \
+        filter(Server.name == sname). \
+        filter(History.time_in is None).all()
+
+    print('active', active)
     return jsonify(results=[[x for x in a] for a in active])
 
 
 @app.route('/data/active_users')
 def active_users():
-    active = db.session.query(models.User).join(models.History).filter(models.History.time_in == None).join(
-        models.Product).filter(
-        models.Product.type == 'core').all()
+    active = db.session.query(User).join(History).filter(History.time_in is None).join(
+        Product).filter(
+        Product.type == 'core').all()
     return active
 
 
 @app.route('/products/<servername>/<productname>')
 def productname(servername, productname, days=3):
-    users = db.session.query(models.User.name, models.History.time_in,
-                             func.sum(func.julianday(func.ifnull(models.History.calculated_timein,
+    users = db.session.query(User.name, History.time_in,
+                             func.sum(func.julianday(func.ifnull(History.calculated_timein,
                                                                  datetime.datetime.now())) - func.julianday(
-                                 models.History.time_out)).label('time_sum')). \
-        filter(models.User.id == models.History.user_id). \
-        filter(models.History.product_id == models.Product.id). \
-        filter(models.Product.common_name == productname). \
-        distinct(models.User.name).group_by(models.User.name).all()
+                                 History.time_out)).label('time_sum')). \
+        filter(User.id == History.user_id). \
+        filter(History.product_id == Product.id). \
+        filter(Product.common_name == productname). \
+        distinct(User.name).group_by(User.name).all()
 
     days = datetime.datetime.utcnow() - datetime.timedelta(days=days)
 
-    chart_data = db.session.query(func.count(models.History.user_id).label('users'), models.Product.license_total,
-                                  extract('month', models.History.time_out).label('m'),
-                                  extract('day', models.History.time_out).label('d'),
-                                  extract('year', models.History.time_out).label('y')). \
-        filter(models.Product.id == models.History.product_id). \
-        filter(models.Server.id == models.Updates.server_id). \
-        filter(models.Updates.id == models.History.update_id). \
-        filter(models.Server.name == servername). \
-        filter(models.History.time_out > days). \
-        filter(models.Product.common_name == productname). \
-        distinct(models.History.user_id). \
-        group_by(models.Product.common_name, models.Server.name, 'm', 'd', 'y'). \
+    chart_data = db.session.query(func.count(History.user_id).label('users'), Product.license_total,
+                                  extract('month', History.time_out).label('m'),
+                                  extract('day', History.time_out).label('d'),
+                                  extract('year', History.time_out).label('y')). \
+        filter(Product.id == History.product_id). \
+        filter(Server.id == Updates.server_id). \
+        filter(Updates.id == History.update_id). \
+        filter(Server.name == servername). \
+        filter(History.time_out > days). \
+        filter(Product.common_name == productname). \
+        distinct(History.user_id). \
+        group_by(Product.common_name, Server.name, 'm', 'd', 'y'). \
         order_by(desc('y')).order_by(desc('m')).order_by(desc('d')).all()
 
-    info = db.session.query(models.Product). \
-        filter(models.Server.id == models.Product.server_id). \
-        filter(models.Server.name == servername). \
-        filter(models.Product.common_name == productname).first()
+    info = db.session.query(Product). \
+        filter(Server.id == Product.server_id). \
+        filter(Server.name == servername). \
+        filter(Product.common_name == productname).first()
     return render_template('pages/productname.html',
                            users=users,
                            chart_data=chart_data,
@@ -108,59 +115,59 @@ def productchart():
     servername = request.args.get('servername')
     productname = request.args.get('productname')
     days = datetime.datetime.utcnow() - datetime.timedelta(days=int(selection))
-    chart_data = db.session.query(func.count(models.History.user_id).label('users'), models.Product.license_total,
-                                  extract('month', models.History.time_out).label('m'),
-                                  extract('day', models.History.time_out).label('d'),
-                                  extract('year', models.History.time_out).label('y')). \
-        filter(models.Product.id == models.History.product_id). \
-        filter(models.Server.id == models.Updates.server_id). \
-        filter(models.Updates.id == models.History.update_id). \
-        filter(models.Server.name == servername). \
-        filter(models.History.time_out > days). \
-        filter(models.Product.common_name == productname). \
-        distinct(models.History.user_id). \
-        group_by(models.Product.common_name, models.Server.name, 'm', 'd', 'y'). \
+    chart_data = db.session.query(func.count(History.user_id).label('users'), Product.license_total,
+                                  extract('month', History.time_out).label('m'),
+                                  extract('day', History.time_out).label('d'),
+                                  extract('year', History.time_out).label('y')). \
+        filter(Product.id == History.product_id). \
+        filter(Server.id == Updates.server_id). \
+        filter(Updates.id == History.update_id). \
+        filter(Server.name == servername). \
+        filter(History.time_out > days). \
+        filter(Product.common_name == productname). \
+        distinct(History.user_id). \
+        group_by(Product.common_name, Server.name, 'm', 'd', 'y'). \
         order_by(desc('y')).order_by(desc('m')).order_by(desc('d')).all()
     return jsonify(result=chart_data)
 
 
 @app.route('/users')
 def users():
-    all_users = db.session.query(models.User.name, models.History.time_in,
-                                 func.sum(func.julianday(func.ifnull(models.History.calculated_timein,
+    all_users = db.session.query(User.name, History.time_in,
+                                 func.sum(func.julianday(func.ifnull(History.calculated_timein,
                                                                      datetime.datetime.now())) - func.julianday(
-                                     models.History.time_out)).label('time_sum')). \
-        filter(models.User.id == models.History.user_id). \
-        filter(models.History.product_id == models.Product.id). \
-        filter(models.Product.type == 'core'). \
-        distinct(models.User.name).group_by(models.User.name).all()
+                                     History.time_out)).label('time_sum')). \
+        filter(User.id == History.user_id). \
+        filter(History.product_id == Product.id). \
+        filter(Product.type == 'core'). \
+        distinct(User.name).group_by(User.name).all()
     return render_template('pages/users.html',
                            users=all_users)
 
 
 @app.route('/users/<username>')
 def username(username):
-    workstations = db.session.query(models.Workstation, models.History). \
-        filter(models.User.id == models.History.user_id). \
-        filter(models.Workstation.id == models.History.workstation_id). \
-        group_by(models.Workstation.name).distinct(models.Workstation.name). \
-        filter(models.User.name == username).all()
+    workstations = db.session.query(Workstation, History). \
+        filter(User.id == History.user_id). \
+        filter(Workstation.id == History.workstation_id). \
+        group_by(Workstation.name).distinct(Workstation.name). \
+        filter(User.name == username).all()
 
-    servers = db.session.query(models.Server, models.History). \
-        filter(models.User.id == models.History.user_id). \
-        filter(models.Updates.id == models.History.update_id). \
-        filter(models.Server.id == models.Updates.server_id). \
-        filter(models.User.name == username). \
-        group_by(models.Server.name).distinct(models.Server.name).all()
+    servers = db.session.query(Server, History). \
+        filter(User.id == History.user_id). \
+        filter(Updates.id == History.update_id). \
+        filter(Server.id == Updates.server_id). \
+        filter(User.name == username). \
+        group_by(Server.name).distinct(Server.name).all()
 
-    products = db.session.query(models.Product.common_name, models.Product.type, models.History.time_in,
-                                func.sum(func.julianday(func.ifnull(models.History.calculated_timein,
+    products = db.session.query(Product.common_name, Product.type, History.time_in,
+                                func.sum(func.julianday(func.ifnull(History.calculated_timein,
                                                                     datetime.datetime.now())) - func.julianday(
-                                    models.History.time_out)).label('time_sum')). \
-        filter(models.User.id == models.History.user_id). \
-        filter(models.User.name == username). \
-        filter(models.History.product_id == models.Product.id). \
-        group_by(models.Product.common_name).distinct(models.Product.common_name).all()
+                                    History.time_out)).label('time_sum')). \
+        filter(User.id == History.user_id). \
+        filter(User.name == username). \
+        filter(History.product_id == Product.id). \
+        group_by(Product.common_name).distinct(Product.common_name).all()
     return render_template('pages/username.html',
                            workstations=workstations,
                            servers=servers,
@@ -169,45 +176,39 @@ def username(username):
 
 @app.route('/servers')
 def servers():
-    subq = db.session.query(
-        models.Server.name,
-        func.max(models.Updates.time_complete).label('maxdate')
-    ).filter(models.Server.id == models.Updates.server_id).group_by(models.Server.name).subquery('t2')
-
-    query = db.session.query(models.Updates, models.Server).join(
-        subq,
-        and_(
-            models.Server.name == subq.c.name,
-            models.Updates.time_complete == subq.c.maxdate
-        )
-    )
-
+    query = db.session.query(
+        Server.name.label("name"),
+        Updates.info.label("info"),
+        Updates.status.label("status"),
+        Server.id == Updates.server_id,
+        func.max(Updates.time_complete).label('maxdate')
+    ).filter(Server.id == Updates.server_id).group_by(Server.name).all()
     return render_template('pages/servers.html', servers=query)
 
 
 @app.route('/servers/<servername>')
 def servername(servername):
-    status = db.session.query(models.Server, models.Updates). \
-        filter(models.Server.id == models.Updates.server_id). \
-        filter(models.Server.name == servername). \
-        order_by(desc(models.Updates.time_start)).limit(1).first()
-    history = db.session.query(models.Server, models.Updates). \
-        filter(models.Server.id == models.Updates.server_id). \
-        filter(models.Server.name == servername). \
-        filter(models.Updates.status != 'OK'). \
-        order_by(desc(models.Updates.time_start)).all()
-    users = db.session.query(models.User, models.History, models.Server, models.Updates, models.Product). \
-        filter(models.User.id == models.History.user_id). \
-        filter(models.Updates.id == models.History.update_id). \
-        filter(models.Product.id == models.History.product_id). \
-        filter(models.Server.id == models.Updates.server_id). \
-        filter(models.Product.type == 'core'). \
-        filter(models.Server.name == servername). \
-        distinct(models.User.name).group_by(models.User.name).all()
-    first_update = db.session.query(models.Updates). \
-        filter(models.Server.id == models.Updates.server_id). \
-        filter(models.Server.name == servername). \
-        order_by(asc(models.Updates.time_start)).limit(1).first()
+    status = db.session.query(Server, Updates). \
+        filter(Server.id == Updates.server_id). \
+        filter(Server.name == servername). \
+        order_by(desc(Updates.time_start)).limit(1).first()
+    history = db.session.query(Server, Updates). \
+        filter(Server.id == Updates.server_id). \
+        filter(Server.name == servername). \
+        filter(Updates.status != 'UP'). \
+        order_by(desc(Updates.time_start)).all()
+    users = db.session.query(User, History, Server, Updates, Product). \
+        filter(User.id == History.user_id). \
+        filter(Updates.id == History.update_id). \
+        filter(Product.id == History.product_id). \
+        filter(Server.id == Updates.server_id). \
+        filter(Product.type == 'core'). \
+        filter(Server.name == servername). \
+        distinct(User.name).group_by(User.name).all()
+    first_update = db.session.query(Updates). \
+        filter(Server.id == Updates.server_id). \
+        filter(Server.name == servername). \
+        order_by(asc(Updates.time_start)).limit(1).first()
     return render_template('pages/servername.html',
                            chart_data=None,
                            status=status,
@@ -218,41 +219,41 @@ def servername(servername):
 
 @app.route('/workstations')
 def workstations():
-    all_ws = db.session.query(models.Workstation.name, models.History.time_in,
-                              func.sum(func.julianday(func.ifnull(models.History.calculated_timein,
+    all_ws = db.session.query(Workstation.name, History.time_in,
+                              func.sum(func.julianday(func.ifnull(History.calculated_timein,
                                                                   datetime.datetime.now())) - func.julianday(
-                                  models.History.time_out)).label('time_sum')). \
-        filter(models.Workstation.id == models.History.workstation_id). \
-        filter(models.History.product_id == models.Product.id). \
-        filter(models.Product.type == 'core'). \
-        distinct(models.Workstation.name).group_by(models.Workstation.name).all()
+                                  History.time_out)).label('time_sum')). \
+        filter(Workstation.id == History.workstation_id). \
+        filter(History.product_id == Product.id). \
+        filter(Product.type == 'core'). \
+        distinct(Workstation.name).group_by(Workstation.name).all()
     return render_template('pages/workstations.html',
                            ws=all_ws)
 
 
 @app.route('/workstations/<workstationname>')
 def workstationname(workstationname):
-    users = db.session.query(models.User.name, models.History.time_in). \
-        filter(models.User.id == models.History.user_id). \
-        filter(models.Workstation.id == models.History.workstation_id). \
-        group_by(models.User.name).distinct(models.User.name). \
-        filter(models.Workstation.name == workstationname).all()
+    users = db.session.query(User.name, History.time_in). \
+        filter(User.id == History.user_id). \
+        filter(Workstation.id == History.workstation_id). \
+        group_by(User.name).distinct(User.name). \
+        filter(Workstation.name == workstationname).all()
 
-    servers = db.session.query(models.Server, models.History.time_in). \
-        filter(models.Workstation.id == models.History.workstation_id). \
-        filter(models.Updates.id == models.History.update_id). \
-        filter(models.Server.id == models.Updates.server_id). \
-        filter(models.Workstation.name == workstationname). \
-        group_by(models.Server.name).distinct(models.Server.name).all()
+    servers = db.session.query(Server, History.time_in). \
+        filter(Workstation.id == History.workstation_id). \
+        filter(Updates.id == History.update_id). \
+        filter(Server.id == Updates.server_id). \
+        filter(Workstation.name == workstationname). \
+        group_by(Server.name).distinct(Server.name).all()
 
-    products = db.session.query(models.Product.common_name, models.Product.type, models.History.time_in,
-                                func.sum(func.julianday(func.ifnull(models.History.calculated_timein,
+    products = db.session.query(Product.common_name, Product.type, History.time_in,
+                                func.sum(func.julianday(func.ifnull(History.calculated_timein,
                                                                     datetime.datetime.now())) - func.julianday(
-                                    models.History.time_out)).label('time_sum')). \
-        filter(models.Workstation.id == models.History.workstation_id). \
-        filter(models.Workstation.name == workstationname). \
-        filter(models.History.product_id == models.Product.id). \
-        group_by(models.Product.common_name).distinct(models.Product.common_name).all()
+                                    History.time_out)).label('time_sum')). \
+        filter(Workstation.id == History.workstation_id). \
+        filter(Workstation.name == workstationname). \
+        filter(History.product_id == Product.id). \
+        group_by(Product.common_name).distinct(Product.common_name).all()
     return render_template('pages/workstationname.html',
                            users=users,
                            servers=servers,

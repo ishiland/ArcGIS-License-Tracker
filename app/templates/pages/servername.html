@@ -12,54 +12,6 @@
 {% block content %}
     <div class="grid-container">
         <div class="column-18">
-            <!--<div class="card block trailer-1">-->
-                <!--<div class="panel modifier-class">-->
-                    <!--<div class="panel-header">Usage History</div>-->
-                    <!--{% if chart_data %}-->
-                        <!--{% if chart_data|length == 0 %}-->
-                            <!--<em>Not Available</em>-->
-                        <!--{% else %}-->
-                            <!--<canvas id="product-chart" width="700" height="100"></canvas>-->
-                            <!--<script>-->
-                                <!--var lineData = {-->
-                                    <!--labels: [],-->
-                                    <!--datasets: [-->
-                                        <!--{-->
-                                            <!--borderColor: "#3699ff",-->
-                                            <!--data: []-->
-                                        <!--}-->
-                                    <!--]-->
-                                <!--};-->
-                                <!--{% for item in chart_data %}-->
-                                    <!--lineData.labels.push('{{item[2][0:3]}}, ' + '{{item[3][0:3]}}' + ' {{item[4]}}');-->
-                                    <!--lineData.datasets[0].data.push({{item[0]}});-->
-                                <!--{% endfor %}-->
-                                <!--var ctx = document.getElementById("product-chart").getContext("2d");-->
-                                <!--var myLineChart = new Chart(ctx, {-->
-                                    <!--type: 'line',-->
-                                    <!--data: lineData,-->
-                                    <!--options: {-->
-                                        <!--tooltips: {-->
-                                            <!--mode: 'index',-->
-                                            <!--intersect: false-->
-                                        <!--},-->
-                                        <!--scales: {-->
-                                            <!--yAxes: [{-->
-                                                <!--ticks: {-->
-                                                    <!--stepSize: 5-->
-                                                <!--}-->
-                                            <!--}]-->
-                                        <!--}-->
-                                    <!--}-->
-                                <!--});-->
-                                <!--myLineChart.legend.legendItems[0].text = 'Daily Unique Users';-->
-                            <!--</script>-->
-                        <!--{% endif %}-->
-                    <!--{% else %}-->
-                        <!--Chart data not available-->
-                    <!--{% endif %}-->
-                <!--</div>-->
-            <!--</div>-->
             <div class="card block trailer-1">
                 <div class="panel">
                     <div class="panel-header">Issue History</div>
@@ -93,18 +45,18 @@
                 <div class="panel">
                     <div class="panel-header">Status</div>
                     {% if status %}
-                        {% if status.Updates.status == 'OK' %}
+                        {% if status.Updates.status == 'UP' %}
                             <span class="icon-ui-check-mark icon-ui-green font-size-2">{{ status.Server.name }} is up.</span>
                             <br>
                             Last updated {{ status.Updates.time_complete | relative_time }}.
-                        {% elif status.Updates.status == 'UPDATING' %}
-                            <span class="icon-ui-refresh icon-ui-green font-size-2">Updating {{ status.Server.name  }}</span>
-                            <br>
-                            Please refresh your browser in a few moments to reflect recent data.
+{#                        {% elif status.Updates.status == 'UPDATING' %}#}
+{#                            <span class="icon-ui-refresh icon-ui-green font-size-2">Updating {{ status.Server.name  }}</span>#}
+{#                            <br>#}
+{#                            Please refresh your browser in a few moments to reflect recent data.#}
                         {% else %}
                             <span class="icon-ui-notice-round icon-ui-orange font-size-2">Check {{ status.Server.name  }}</span>
                             <br>
-                            Last updated {{ status.Updates.status  | relative_time }}.
+                            Last updated {{ status.Updates.time_complete  | relative_time }}.
                         {% endif %}
                     {% else %}
                         Could not retrieve server status.

@@ -18,14 +18,14 @@ class Server(db.Model):
         return '<Server %r>' % self.name
 
     @staticmethod
-    def upsert(s):
-        p = db.session.query(Server).filter(Server.name == s['name']).first()
+    def upsert(hostname, port):
+        p = db.session.query(Server).filter(Server.name == hostname).first()
         if p is None:
-            p = Server(name=s['name'],
-                       port=s['port'])
+            p = Server(name=hostname,
+                       port=port)
             db.session.add(p)
         else:
-            p.port = s['port']
+            p.port = port
         db.session.commit()
         return p.id
 
@@ -65,7 +65,7 @@ class Updates(db.Model):
         db.session.close()
 
 
-class Product(db.Model, ):
+class Product(db.Model):
     __table_args__ = (
         db.UniqueConstraint('server_id', 'internal_name', name='UQ_server_internalname'),
         db.UniqueConstraint('server_id', 'common_name', name='UQ_server_commonname'),
@@ -76,14 +76,11 @@ class Product(db.Model, ):
     common_name = db.Column(db.String(35), nullable=False)
     category = db.Column(db.String(35), nullable=False)
     type = db.Column(db.String(10), nullable=False)
+    expires = db.Column(db.String(50))
+    version = db.Column(db.String(5))
     license_out = db.Column(db.Integer)
     license_total = db.Column(db.Integer)
     FlexLM_server = db.relationship(u'Server')
-
-    def __init__(self, server_id, internal_name, **kwargs):
-        self.server_id = server_id
-        self.internal_name = internal_name
-        super(Product, self).__init__(**kwargs)
 
     def __repr__(self):
         return '<Product %r>' % self.common_name
@@ -95,14 +92,17 @@ class Product(db.Model, ):
 
     @staticmethod
     def upsert(server_id, internal_name, **kwargs):
-        p = db.session.query(Product).filter_by(internal_name=internal_name, server_id=server_id).update(kwargs)
-        if p == 0:
+        p = db.session.query(Product).filter_by(internal_name=internal_name, server_id=server_id)
+        if not p.first():
             p = Product(server_id=server_id,
                         internal_name=internal_name,
                         **kwargs)
             db.session.add(p)
             db.session.commit()
-        return p
+            return p.id
+        else:
+            p.update(kwargs)
+            return p.first().id
 
     @staticmethod
     def query(internal_name, server_id):
@@ -159,8 +159,6 @@ class User(db.Model):
         return db.session.query(User.name).distinct().all()
 
 
-
-
 class History(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
@@ -193,20 +191,19 @@ class History(db.Model):
             return datetime.datetime.now()
 
     @staticmethod
-    def add(user_id, workstation_id, server_id, product_id, update_id, time_out):
-        h = db.session.query(History).filter_by(user_id=user_id,
-                                                workstation_id=workstation_id,
-                                                product_id=product_id,
-                                                time_in=None).join(Product).filter_by(server_id=server_id).first()
+    # def add(user_id, workstation_id, server_id, product_id, update_id, time_out):
+    def add(update_id, **kwargs):
+
+        h = db.session.query(History).filter_by(user_id=kwargs.get('user_id'),
+                                                workstation_id=kwargs.get('workstation_id'),
+                                                product_id=kwargs.get('product_id'),
+                                                time_in=None).join(Product).filter_by(server_id=kwargs.get('server_id')).first()
         if h is None:
-            h = History(user_id=user_id,
-                        workstation_id=workstation_id,
-                        product_id=product_id,
-                        update_id=update_id,
-                        time_out=time_out,
-                        time_in=None)
+            h = History(update_id=update_id,
+                        time_in=None,
+                        **kwargs)
             db.session.add(h)
-            db.session.flush()
+            db.session.commit()
         return h.id
 
     @staticmethod
@@ -232,7 +229,6 @@ class History(db.Model):
         query = db.session.query(User).join(History).join(Product).filter(History.time_in == None,
                                                                           server_id=server_id).all()
         return query
-
 
 
 # ----------------------------------------------------------------------------#

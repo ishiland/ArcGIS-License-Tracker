@@ -1,45 +1,50 @@
-from flask_script import Manager, prompt_bool, Shell, Server
-from termcolor import colored
-import colorama
+import unittest
+from flask_script import Manager, Shell, Server
 from app import app, db
 
-colorama.init()
-
 manager = Manager(app)
-
 
 def make_shell_context():
     return dict(app=app)
 
-
 @manager.command
-def initdb():
-    ''' Create the SQL database. '''
+def recreate_db():
+    """
+    Create the SQL database.
+    """
+    db.drop_all()
     db.create_all()
-    print(colored('The SQL database has been created', 'green'))
+    db.session.commit()
+    print("recreated the database")
 
 
 @manager.command
-def dropdb():
-    ''' Delete the SQL database. '''
-    if prompt_bool('Are you sure you want to lose all your SQL data?'):
-        db.drop_all()
-        print(colored('The SQL database has been deleted', 'green'))
-
+def test():
+    """
+    run unit tests
+    :return: result, successful or not
+    """
+    tests = unittest.TestLoader().discover('tests', pattern='test*.py')
+    result = unittest.TextTestRunner(verbosity=2).run(tests)
+    if result.wasSuccessful():
+        return 0
+    return 1
 
 @manager.command
-def read():
-    from app.toolbox.lm_read import run
-    ''' Read data from the license server. '''
-    read_data = run()
+def read_once():
+    """
+    a one-time read from the license server.
+    """
+    from app.read_licenses import read
+    read_data = read()
     if not read_data:
-        print(colored('Read completed successfully.', 'green'))
+        print('Read completed successfully.')
     else:
-        print(colored('There was a problem reading from your license server.', 'red'))
+        print('There was a problem reading from your license server.')
 
 
-# Set the use_reloader to False so the `lm_read.py` process is not duplicated
-manager.add_command('runserver', Server(use_reloader=False))
+# Set use_reloader to False so the `lm_read.py` process is not duplicated
+manager.add_command('runserver', Server(use_reloader=True, threaded=True))
 manager.add_command('shell', Shell(make_context=make_shell_context))
 
 if __name__ == '__main__':
