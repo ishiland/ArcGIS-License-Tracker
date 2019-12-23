@@ -1,0 +1,65 @@
+lmutil - Copyright (c) 1989-2018 Flexera. All Rights Reserved.
+Flexible License Manager status on Mon 12/23/2019 14:56
+
+[Detecting lmgrd processes...]
+License server status: 27000@gv-gislicense
+    License file(s) on gv-gislicense: C:\Program Files (x86)\ArcGIS\LicenseManager\bin\service.txt:
+
+gv-gislicense: license server UP (MASTER) v11.16.2
+
+Vendor daemon status (on gv-gislicense):
+
+    ARCGIS: UP v11.16.2
+Feature usage info:
+
+Users of spatialAnalystN:  (Error: 6 licenses, unsupported by licensed server)
+
+Users of networkAnalystN:  (Error: 9 licenses, unsupported by licensed server)
+
+Users of publisherN:  (Error: 6 licenses, unsupported by licensed server)
+
+Users of 3DAnalystN:  (Error: 6 licenses, unsupported by licensed server)
+
+Users of desktopBasicN:  (Error: 48 licenses, unsupported by licensed server)
+
+Users of desktopAdvN:  (Error: 27 licenses, unsupported by licensed server)
+
+Users of ACT:  (Total of 1 license issued;  Total of 0 licenses in use)
+
+Users of ARC/INFO:  (Total of 13 licenses issued;  Total of 3 licenses in use)
+
+  "ARC/INFO" v10.1, vendor: ARCGIS, expiry: permanent(no expiration date)
+  floating license
+
+    gaumere Win07-drop5a7c ,_6!/#bE-mN*5kgRxhN~xU (v10.1) (gv-gislicense/27000 412), start Wed 12/18 18:33
+    rakovice WIN10-RAKOVICE ,?UAH<iz>]_#:RNDjP8yjE6 (v10.1) (gv-gislicense/27000 131), start Mon 12/23 12:27
+    albukhg WIN10-ALBUKHG1 ,?UAH<Xt/TKm)-)m?{i@0n (v10.1) (gv-gislicense/27000 1408), start Mon 12/23 14:54
+
+Users of ArcStorm:  (Total of 13 licenses issued;  Total of 0 licenses in use)
+
+Users of ArcStormEnable:  (Total of 13 licenses issued;  Total of 0 licenses in use)
+
+Users of desktopAdvP:  (Total of 1 license issued;  Total of 0 licenses in use)
+
+Users of desktopBasicP:  (Total of 10 licenses issued;  Total of 1 license in use)
+
+  "desktopBasicP" v10.1, vendor: ARCGIS, expiry: permanent(no expiration date)
+  floating license
+
+    shilandi WIN10-SHILANDI WIN10-SHILANDI (v10.1) (gv-gislicense/27000 531), start Mon 12/23 11:55
+
+Users of Grid:  (Total of 2 licenses issued;  Total of 0 licenses in use)
+
+Users of MrSID:  (Total of 13 licenses issued;  Total of 0 licenses in use)
+
+Users of Network:  (Total of 3 licenses issued;  Total of 0 licenses in use)
+
+Users of Plotting:  (Total of 13 licenses issued;  Total of 0 licenses in use)
+
+Users of Publisher:  (Total of 2 licenses issued;  Total of 0 licenses in use)
+
+Users of TIFFLZW:  (Total of 13 licenses issued;  Total of 0 licenses in use)
+
+Users of TIN:  (Total of 2 licenses issued;  Total of 0 licenses in use)
+
+Users of Viewer:  (Total of 14 licenses issued;  Total of 0 licenses in use)

@@ -1,7 +1,7 @@
-import os
+import os, subprocess
 from datetime import datetime
 from app.models import Product, Updates, User, History, Server, Workstation
-from app.toolbox.lm_config import license_servers, lm_util, products
+from app.arcgis_config import license_servers, lm_util, products
 
 
 def check_year(server_id):
@@ -30,16 +30,14 @@ def reset(uid, sid, e_msg):
     Updates.end(uid, 'ERROR', e_msg)
 
 
-def run():
+def read():
     """
     Entry point for updating licenses. This script can optionally be run stand alone (cron job or windows task scheduler).
     Relies on the lmutil.exe to collect server information.
     """
-
     checked_out_history_ids = []
-    error = False
+    has_error = False
     try:
-
         for server in license_servers:
             print('Reading from {} on port {}...'.format(server['name'], server['port']))
             s = server['name']
@@ -51,7 +49,9 @@ def run():
             check_year(server_id)
             try:
                 # Server info
-                lm_util_lines = os.popen(lm_util + " lmstat -c " + port + "@" + s).readlines()
+                process = subprocess.Popen([lm_util, "lmstat", "-c", "{}@{}".format(port, s)], stdout=subprocess.PIPE,
+                                           bufsize=1, universal_newlines=True)
+                lm_util_lines = process.stdout.readlines()
                 if len(lm_util_lines) == 0:
                     m = 'Unable to read license data. Check path to lmutil.exe and license server parameters are correct.'
                     raise Exception(m)
@@ -65,6 +65,7 @@ def run():
                             if 'license server up' in info.lower():
                                 status = 'OK'
                                 info = None
+                                break
                             else:
                                 raise Exception(
                                     'Unable to parse license data. Check license server is functioning properly.')
@@ -72,15 +73,16 @@ def run():
                         raise Exception('No license data from lmutil.exe')
             except Exception as e:
                 reset(update_id, server_id, str(e))
-                error = True
+                has_error = True
                 continue
 
             try:
                 # Product info
                 for idx, val in enumerate(products):
-                    lm_util_lines = os.popen(
-                        lm_util + " lmstat -f " + val['internal-name'] + " -c " + port + "@" + s).readlines()
-                    for idx, line in enumerate(lm_util_lines):
+                    process = subprocess.Popen(
+                        [lm_util, "lmstat", "-c", "{} {}@{}".format(val['internal-name'], port, s)],
+                        stdout=subprocess.PIPE, bufsize=1, universal_newlines=True)
+                    for idx, line in enumerate(process.stdout.readlines()):
                         if 'Users of ' + val['internal-name'] in line:
                             lic = line.lower().split('total of ')
                             lic_total = int(lic[1][:2])
@@ -117,25 +119,26 @@ def run():
                             workstation_id = Workstation.add(workstation=computer)
                             user_id = User.add(username=user)
                             product_id = Product.query(val['internal-name'], server_id)
-                            history_id = History.add(user_id, workstation_id, server_id, product_id, update_id, date_4_db)
+                            history_id = History.add(user_id, workstation_id, server_id, product_id, update_id,
+                                                     date_4_db)
                             checked_out_history_ids.append(history_id)
 
-                dt = datetime.now().replace(second=0, microsecond=0)
-                checked_out = History.time_in_none(server_id)
-                for c in checked_out:
-                    if c.id not in checked_out_history_ids:
-                        History.update(c.id, dt, server_id)
-                Updates.end(update_id, status, info)
+                    dt = datetime.now().replace(second=0, microsecond=0)
+                    checked_out = History.time_in_none(server_id)
+                    for c in checked_out:
+                        if c.id not in checked_out_history_ids:
+                            History.update(c.id, dt, server_id)
+                    Updates.end(update_id, status, info)
 
             except Exception as e:
                 reset(update_id, server_id, str(e))
                 print(e)
-                error = True
+                has_error = True
                 continue
 
     except Exception as e:
-        error = True
+        has_error = True
         print(e)
     finally:
         print("Read process finished.")
-        return error
+        return has_error
