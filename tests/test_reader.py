@@ -3,7 +3,7 @@ from app.arcgis_config import products
 from app import db
 from app.models import Server, Product, Updates, History, User, Workstation
 
-from app.read_licenses import split_license_data, parse_server_info, product_has_users
+from app.read_licenses import split_license_data, parse_server_info, add_product, add_users_and_workstations
 
 class TestUpsert(BaseTestCase):
 
@@ -51,16 +51,28 @@ class TestFunctions(BaseTestCase):
 
         # result1 = product_has_users(data1, 1)
         # result2 = product_has_users(data2, 1)
-        result3 = product_has_users(data3, 1)
+        result3 = add_users_and_workstations(data3)
+        print(result3)
 
         # self.assertIsNone(result1)
         # self.assertIsNone(result2)
-        self.assertIsNotNone(result3)
+        # self.assertIsNotNone(result3)
 
 
 class TestParsing(BaseTestCase):
 
-    def test_product_splitting(self):
+    def test_parse_server_info(self):
+        result = parse_server_info(self.lines)
+        self.assertEqual(result[2], 'UP')
+
+    def test_split_license_data(self):
 
         result = split_license_data(self.lines)
         self.assertEqual(len(result), 21)
+
+    def test_add_product(self):
+        line = ' DESKTOPBASICP:  (TOTAL OF 10 LICENSES ISSUED;  TOTAL OF 1 LICENSE IN USE)\n  "DESKTOPBASICP" V10.1, VENDOR: ARCGIS, EXPIRY: PERMANENT(NO EXPIRATION DATE)\n  FLOATING LICENSE\n    SHILANDI WIN10-SHILANDI WIN10-SHILANDI (V10.1) (GV-GISLICENSE/27000 531), START MON 12/23 11:55'
+        result = add_product(line, server_id=1)
+        self.assertEqual(result, 1)
+
+
