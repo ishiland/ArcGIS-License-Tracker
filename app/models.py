@@ -127,6 +127,7 @@ class Workstation(db.Model):
             w = Workstation(name=workstation)
             db.session.add(w)
             db.session.commit()
+            return db.session.query(Workstation).filter_by(name=workstation).first().id
         return w.id
 
 
@@ -146,7 +147,7 @@ class User(db.Model):
         if u is None:
             u = User(name=username)
             db.session.add(u)
-        db.session.commit()
+            db.session.commit()
         return u.id
 
     @staticmethod
@@ -172,13 +173,13 @@ class History(db.Model):
     FlexLM_user = db.relationship(u'User')
     FlexLM_workstation = db.relationship(u'Workstation')
 
-    def __init__(self, user_id, workstation_id, product_id, update_id, time_out, time_in):
-        self.user_id = user_id
-        self.workstation_id = workstation_id
-        self.product_id = product_id
-        self.update_id = update_id
-        self.time_out = time_out
-        self.time_in = time_in
+    # def __init__(self, user_id, workstation_id, product_id, update_id, time_out, time_in):
+    #     self.user_id = user_id
+    #     self.workstation_id = workstation_id
+    #     self.product_id = product_id
+    #     self.update_id = update_id
+    #     self.time_out = time_out
+    #     self.time_in = time_in
 
     def __repr__(self):
         return '<History %r>' % self.id
@@ -192,12 +193,12 @@ class History(db.Model):
 
     @staticmethod
     # def add(user_id, workstation_id, server_id, product_id, update_id, time_out):
-    def add(update_id, **kwargs):
+    def add(update_id, server_id, **kwargs):
 
         h = db.session.query(History).filter_by(user_id=kwargs.get('user_id'),
                                                 workstation_id=kwargs.get('workstation_id'),
                                                 product_id=kwargs.get('product_id'),
-                                                time_in=None).join(Product).filter_by(server_id=kwargs.get('server_id')).first()
+                                                time_in=None).join(Product).filter_by(server_id=server_id).first()
         if h is None:
             h = History(update_id=update_id,
                         time_in=None,
