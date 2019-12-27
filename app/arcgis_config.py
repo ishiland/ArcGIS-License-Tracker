@@ -1,4 +1,3 @@
-import os
 
 # Update interval in minutes to read from license server
 UPDATE_INTERVAL = 5
@@ -11,8 +10,7 @@ license_servers = [
 
 # Path to the lmutil.exe.
 lm_util = r"C:\Program Files (x86)\ArcGIS\LicenseManager\bin\lmutil.exe"
-# lm_util = os.path.abspath(r"Program Files (x86)/ArcGIS/LicenseManager/bin/lmutil.exe")
-# lm_util = os.path.join( "C:\\", "Program Files (x86)", "ArcGIS", "LicenseManager", "bin", "lmutil.exe" )
+
 # list of products to check for and track on license server.
 products = {
 

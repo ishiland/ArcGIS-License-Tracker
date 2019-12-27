@@ -13,7 +13,7 @@ import humanize
 def dashboard():
     servers = db.session.query(Server).all()
     user_count = db.session.query(User).count()
-    active_users = db.session.query(User).join(History).filter(History.time_in is None).join(
+    active_users = db.session.query(User).join(History).filter(History.time_in == None).join(
         Product).filter(
         Product.type == 'core').all()
     workstation_count = db.session.query(Workstation).count()
@@ -48,8 +48,6 @@ def product_availability():
     """
     sname = request.args.get('servername')
     pname = request.args.get('product')
-    print('product', pname)
-    print('servername', sname)
     active = db.session.query(User.name, Workstation.name, Product.common_name,
                               History.time_in, History.time_out, Server.name). \
         filter(User.id == History.user_id). \
@@ -58,15 +56,13 @@ def product_availability():
         filter(Server.id == Product.server_id). \
         filter(Product.internal_name == pname). \
         filter(Server.name == sname). \
-        filter(History.time_in is None).all()
-
-    print('active', active)
+        filter(History.time_in == None).all()
     return jsonify(results=[[x for x in a] for a in active])
 
 
 @app.route('/data/active_users')
 def active_users():
-    active = db.session.query(User).join(History).filter(History.time_in is None).join(
+    active = db.session.query(User).join(History).filter(History.time_in == None).join(
         Product).filter(
         Product.type == 'core').all()
     return active
