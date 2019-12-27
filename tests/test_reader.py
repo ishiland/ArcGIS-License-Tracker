@@ -3,10 +3,11 @@ from tests.base import BaseTestCase
 from app.arcgis_config import products
 from app.models import Server, Product, Updates, History, User, Workstation
 
-from app.read_licenses import split_license_data, parse_server_info, add_product, add_users_and_workstations
+from app.read_licenses import split_license_data, parse_server_info, add_product, add_users_and_workstations, \
+    map_product_id
 
 
-class TestUpsert(BaseTestCase):
+class TestModels(BaseTestCase):
     def test_upsert(self):
         # insert
         dummy_p1 = products['ARC/INFO']
@@ -43,22 +44,6 @@ class TestUpsert(BaseTestCase):
 
 
 class TestFunctions(BaseTestCase):
-    def test_product_has_users(self):
-        data1 = 'LMUTIL - COPYRIGHT (C) 1989-2018 FLEXERA. ALL RIGHTS RESERVED.\nFLEXIBLE LICENSE MANAGER STATUS ON MON 12/23/2019 12:03\n[DETECTING LMGRD PROCESSES...]\nLICENSE SERVER STATUS: 27000@GV-GISLICENSE\n\n    LICENSE FILE(S) ON GV-GISLICENSE: C:\PROGRAM FILES (X86)\ARCGIS\LICENSEMANAGER\BIN\SERVICE.TXT:\nGV-GISLICENSE: LICENSE SERVER UP (MASTER) V11.16.2\nVENDOR DAEMON STATUS (ON GV-GISLICENSE):\nARCGIS: UP V11.16.2\nFEATURE USAGE INFO:\n'
-        data2 = ' DESKTOPADVP:  (TOTAL OF 1 LICENSE ISSUED;  TOTAL OF 0 LICENSES IN USE)\n'
-        data3 = 'DESKTOPBASICP:  (TOTAL OF 10 LICENSES ISSUED;  TOTAL OF 1 LICENSE IN USE)\n"DESKTOPBASICP" V10.1, VENDOR: ARCGIS, EXPIRY: PERMANENT(NO EXPIRATION DATE)\nFLOATING LICENSE\nSHILANDI WIN10-SHILANDI WIN10-SHILANDI (V10.1) (GV-GISLICENSE/27000 531), START MON 12/23 11:55\n'
-
-        # result1 = product_has_users(data1, 1)
-        # result2 = product_has_users(data2, 1)
-        result3 = add_users_and_workstations(data3)
-        print(result3)
-
-        # self.assertIsNone(result1)
-        # self.assertIsNone(result2)
-        # self.assertIsNotNone(result3)
-
-
-class TestParsing(BaseTestCase):
     def test_parse_server_info(self):
         result = parse_server_info(self.lines)
         self.assertEqual(result[2], 'UP')
@@ -81,5 +66,14 @@ class TestParsing(BaseTestCase):
         result = add_users_and_workstations(line)
         self.assertEqual(result[1]['user_id'], result[0]['user_id'] + 1)
         self.assertEqual(result[1]['workstation_id'], result[0]['workstation_id'] + 1)
-        self.assertEqual(result[0]['date'], datetime.datetime(2019, 12, 26, 13, 50))
-        self.assertEqual(result[1]['date'], datetime.datetime(2019, 12, 25, 11, 50))
+        self.assertEqual(result[0]['time_out'], datetime.datetime(2019, 12, 26, 13, 50))
+        self.assertEqual(result[1]['time_out'], datetime.datetime(2019, 12, 25, 11, 50))
+
+    def test_map_product_id(self):
+        arr = [{'user_id': 1, 'workstation_id': 1, 'time_out': datetime.datetime(2019, 12, 25, 1, 31)},
+               {'user_id': 2, 'workstation_id': 2, 'time_out': datetime.datetime(2019, 12, 26, 2, 32)},
+               {'user_id': 3, 'workstation_id': 3, 'time_out': datetime.datetime(2019, 12, 27, 3, 33)}]
+        result = map_product_id(2, arr)
+        self.assertEqual(result[0]['product_id'], 2)
+        self.assertEqual(result[1]['product_id'], 2)
+        self.assertEqual(result[2]['product_id'], 2)
