@@ -19,7 +19,6 @@
                     var extHtml = "<div class='product-container'><table class='modifier-class product-table'><thead><th>Extensions</th><th>Available</th><th>Total</th></tr></thead><tbody>";
                     data.forEach(function (item) {
                         if (item[0].type === "core") {
-                            console.log(item[0])
                             var href = "<a href='#'><span class='icon-ui-plus-circled icon-ui-green expand-row-button' data-server=" + $(element).text() + " data-product = '" + item[0].internal_name + "'></span></a>" +
                                 "<a href = " + $SCRIPT_ROOT + "/products/" + $(element).text() + "/" + item[0].common_name + ">" + item[0].common_name + "</a>";
 
@@ -60,7 +59,6 @@
             var div = $(this).closest('tr').next('tr').find('td');
             div.toggle();
             $(this).toggleClass("icon-ui-plus-circled icon-ui-green expand-row-button icon-ui-minus-circled icon-ui-red expand-row-button");
-            console.log(data)
             $.getJSON($SCRIPT_ROOT + '/data/product/availability', {
                 servername: data.server,
                 product: data.product

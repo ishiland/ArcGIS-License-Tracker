@@ -9,13 +9,10 @@ class BaseConfig(object):
     DEBUG_TB_ENABLED = False
     # DEBUG_TB_INTERCEPT_REDIRECTS = False
     TIMEZONE = 'US/Eastern'
-
     LOG_LEVEL = logging.DEBUG
     LOG_FILENAME = 'activity.log'
-
     LOG_MAXBYTES = 20000
     LOG_BACKUPS = 0
-
     SECRET_KEY ='houdini'
 
 

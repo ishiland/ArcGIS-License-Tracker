@@ -17,7 +17,6 @@ def recreate_db():
     db.session.commit()
     print("recreated the database")
 
-
 @manager.command
 def test():
     """
@@ -42,9 +41,7 @@ def read_once():
     else:
         print('There was a problem reading from your license server.')
 
-
-# Set use_reloader to False so the `lm_read.py` process is not duplicated
-manager.add_command('runserver', Server(use_reloader=True, threaded=True))
+manager.add_command('runserver', Server(threaded=True))
 manager.add_command('shell', Shell(make_context=make_shell_context))
 
 if __name__ == '__main__':

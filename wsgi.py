@@ -1,4 +1,5 @@
 # python 3
+# used for wsgi apache deployment
 import os, sys
 PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
 activate_this = os.path.join(PROJECT_DIR, 'venv', 'Scripts', 'activate_this.py')

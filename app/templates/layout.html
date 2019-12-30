@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-    <title>ArcGIS License Monitor - {% block title %}{% endblock %}</title>
+    <title>ArcGIS License Tracker - {% block title %}{% endblock %}</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/calcite-web.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
@@ -40,7 +40,7 @@
     <header class="top-nav">
         <div class="grid-container">
             <div class="column-24">
-                <a href="{{ url_for('dashboard') }}" class="top-nav-title">ArcGIS License Monitor</a>
+                <a href="{{ url_for('dashboard') }}" class="top-nav-title">ArcGIS License Tracker</a>
 
                 <nav class="top-nav-list" role="navigation" aria-labelledby="topnav">
                     <a {% if request.endpoint== 'dashboard' %} class='top-nav-link is-active' {% else %}
@@ -80,10 +80,10 @@
     <div class="grid-container">
         <!-- footer section 1 -->
         <div class="column-27">
-            <h6 class="font-size-1">&copy 2020 YOUR COMPANY</h6>
-            <ul class="list-plain">
-                <li class="font-size--3">Developed by <a href="https://github.com/ishiland">github.com/ishiland</a></li>
-            </ul>
+            <h6 class="font-size-1">&copy 2020 City of New York</h6>
+{#            <ul class="list-plain">#}
+{#                <li class="font-size--3">Developed by <a href="https://github.com/ishiland">github.com/ishiland</a></li>#}
+{#            </ul>#}
         </div>
     </div>
 </div>

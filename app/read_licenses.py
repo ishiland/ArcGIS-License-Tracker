@@ -3,6 +3,7 @@ from datetime import datetime
 import subprocess
 from app.arcgis_config import products, license_servers, lm_util
 from app.models import Server, Product, Updates, History, User, Workstation
+from app.logger_setup import logger
 
 
 def check_year(s_id):
@@ -28,6 +29,7 @@ def reset(uid, sid, e_msg):
     Product.reset(sid)
     History.reset(sid)
     Updates.end(uid, 'ERROR', e_msg)
+    logger.warning(e_msg)
 
 def split_license_data(text):
     return text.replace("\n\n", "\n").upper().split("USERS OF")
@@ -86,7 +88,6 @@ def read():
     for s in license_servers:
         try:
             info = ''
-
             server_id = Server.upsert(s['hostname'], s['port'])
             update_id = Updates.start(server_id)
             check_year(server_id)
@@ -131,7 +132,8 @@ def read():
 
         except Exception as e:
             info = "{}: {}".format("Error", str(e))
-            print(info)
+            logger.error(str(e))
             pass
         finally:
+            logger.info('Finished reading data from \'{}\''.format(s))
             Updates.end(update_id, updates['status'], info)

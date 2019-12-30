@@ -35,8 +35,6 @@ def server_availability():
         filter(Product.server_id == Server.id).filter(Server.name == s).all()
     ext = db.session.query(Product, Server).filter(Product.type == 'extension'). \
         filter(Product.server_id == Server.id).filter(Server.name == s).all()
-    print('core', core)
-    print('ext', ext)
     return json.dumps(core + ext, cls=AlchemyEncoder)
 
 
