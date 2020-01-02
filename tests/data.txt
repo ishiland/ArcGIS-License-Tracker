@@ -34,6 +34,7 @@ Users of ARC/INFO:  (Total of 13 licenses issued;  Total of 3 licenses in use)
     gaumere Win07-drop5a7c ,_6!/#bE-mN*5kgRxhN~xU (v10.1) (gv-gislicense/27000 412), start Wed 12/18 18:33
     rakovice WIN10-RAKOVICE ,?UAH<iz>]_#:RNDjP8yjE6 (v10.1) (gv-gislicense/27000 131), start Mon 12/23 12:27
     albukhg WIN10-ALBUKHG1 ,?UAH<Xt/TKm)-)m?{i@0n (v10.1) (gv-gislicense/27000 1408), start Mon 12/23 14:54
+    albukhg WIN10-ALBUKHG ,?UAH<Xt/TKm)|YIp`Dwf (v10.1) (gv-gislicense/27000 104), start Thu 1/2 9:54
 
 Users of ArcStorm:  (Total of 13 licenses issued;  Total of 0 licenses in use)
 

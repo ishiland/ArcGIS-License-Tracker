@@ -12,7 +12,7 @@ class BaseTestCase(TestCase):
         db.create_all(bind=None)
         db.session.commit()
 
-        with open('data.txt') as data:
+        with open('tests/data.txt') as data:
             self.lines = data.read()
 
     def tearDown(self):
