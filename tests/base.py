@@ -1,7 +1,8 @@
 from flask_testing import TestCase
-
+import os
 from app import app, db
 
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
 class BaseTestCase(TestCase):
     def create_app(self):
@@ -12,7 +13,7 @@ class BaseTestCase(TestCase):
         db.create_all(bind=None)
         db.session.commit()
 
-        with open('tests/data.txt') as data:
+        with open(os.path.join(dir_path, 'data.txt')) as data:
             self.lines = data.read()
 
     def tearDown(self):

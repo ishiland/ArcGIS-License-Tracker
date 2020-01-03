@@ -38,3 +38,33 @@ class TestProduct(BaseTestCase):
         dummy_p3['version'] = "10.1"
         result = Product.upsert(**dummy_p3)
         self.assertEqual(result, 3)
+
+
+class TestWorkstation(BaseTestCase):
+    def test_add(self):
+        result1 = Workstation.add('WIN10-SHILAND')
+        result2 = Workstation.add('WIN10-SHILAND1')
+        self.assertEqual(result1, result2 - 1)
+
+
+class TestServer(BaseTestCase):
+    def test_upsert(self):
+        result1 = Server.upsert('test1', 27000)
+        result1_same = Server.upsert('test1', 27000)
+        self.assertEqual(result1, result1_same)
+        result2 = Server.upsert('test2', 27000)
+        self.assertEqual(result1, result2 - 1)
+
+
+class TestUpdates(BaseTestCase):
+    def test_start(self):
+        start_id = Updates.start(server_id=1)
+        self.assertEqual(start_id, 1)
+
+    def test_end(self):
+        Updates.end(1, 'UP', 'test-message')
+        result = Updates.query().filter(id=1).first()
+        self.assertEqual(result, )
+
+
+

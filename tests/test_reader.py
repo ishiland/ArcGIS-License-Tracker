@@ -30,7 +30,9 @@ class TestFunctions(BaseTestCase):
                '    SHILANDI WIN10-SHILANDI WIN10-SHILANDI-1 (V10.1) (GV-GISLICENSE/27000 1421), START THU 12/25 11:50\n'
 
         result = add_users_and_workstations(line)
+        print(result)
         self.assertEqual(result[1]['user_id'], result[0]['user_id'] + 1)
+        self.assertEqual(result[1]['user_id'], result[2]['user_id'])
         self.assertEqual(result[1]['workstation_id'], result[0]['workstation_id'] + 1)
         self.assertEqual(result[2]['workstation_id'], result[1]['workstation_id'] + 1)
         self.assertEqual(result[0]['time_out'], datetime.datetime(datetime.datetime.now().year, 12, 26, 13, 50))
