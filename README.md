@@ -57,7 +57,7 @@ ArcGIS License Tracker is a tool to display current and historical license usage
 
 
 ## Production deployment
-To run in production mode, set the `FLASK_ENV` variable to `production`. You must then initialize a production database as described above using `python manage.py recreate_db`.
+To run in production mode, set the `FLASK_ENV` variable to `production` then initialize a production database as described above using `python manage.py recreate_db`.
 
 Some helpful guides and tools for deploying to IIS:
  - [GitHub Gist](https://gist.github.com/bparaj/ac8dd5c35a15a7633a268e668f4d2c94)
@@ -71,10 +71,10 @@ Some helpful guides and tools for deploying to IIS:
 Tests can be ran using `python manage.py test`
 
 ## Development
-For development, a few things - 
+A few things - 
  - To specify a development environment, open a powershell window and enter the following:
    `$env:FLASK_ENV = "development"`
- - Once running in the dev environment, the app will not automatically start a background process for license reading. This is because the development server will spawn a duplicate background process because of the flask "reloader" feature. Use the command `python manage.py read_once` to start a one-time read process.  
+ - When running in the dev environment, the app will not automatically start a background process for license reading. This is because the development server will spawn a duplicate background process due to the flask "reloader" feature. The command `python manage.py read_once` will run a one-time read process.  
  - The database design is as follows:
     
    ![alt text](database.PNG "Database Diagram")
