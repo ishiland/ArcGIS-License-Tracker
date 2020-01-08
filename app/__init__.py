@@ -18,8 +18,12 @@ else:
 from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy(app)
 
-if flask_env == 'production':
-    # Create a scheduler to update license data in background. Only run this in production.
+
+if flask_env != 'development':
+    """
+    Create a scheduler to update license data in background. 
+    Only run this in production since the development reloader will duplicate background tasks.
+    """
     from app.read_licenses import read
     from app.arcgis_config import UPDATE_INTERVAL
     from apscheduler.schedulers.background import BackgroundScheduler
