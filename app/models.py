@@ -10,10 +10,6 @@ class Server(db.Model):
     name = db.Column(db.String(35), nullable=False, unique=True)
     port = db.Column(db.String(10), nullable=False)
 
-    def __init__(self, name, port):
-        self.name = name
-        self.port = port
-
     def __repr__(self):
         return '<Server %r>' % self.name
 
@@ -39,12 +35,6 @@ class Updates(db.Model):
     time_complete = db.Column(db.DateTime, default=None)
     FlexLM_server = db.relationship(u'Server')
 
-    def __init__(self, time_start, server_id, status, info):
-        self.time_start = time_start
-        self.server_id = server_id
-        self.status = status
-        self.info = info
-
     def __repr__(self):
         return '<Updates %r>' % self.id
 
@@ -62,7 +52,7 @@ class Updates(db.Model):
                                                                   "time_complete": datetime.datetime.now()},
                                                                  synchronize_session='fetch')
         db.session.commit()
-        db.session.close()
+        # db.session.close()
 
 
 class Product(db.Model):
@@ -114,9 +104,6 @@ class Workstation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(25), nullable=False, unique=True)
 
-    def __init__(self, name):
-        self.name = name
-
     def __repr__(self):
         return '<Workstation %r>' % self.name
 
@@ -134,9 +121,6 @@ class Workstation(db.Model):
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(25), nullable=False, unique=True)
-
-    def __init__(self, name):
-        self.name = name
 
     def __repr__(self):
         return '<User %r>' % self.name

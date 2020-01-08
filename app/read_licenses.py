@@ -19,6 +19,7 @@ def check_year(s_id):
             History.reset(s_id)
             break
 
+
 def reset(uid, sid, e_msg):
     """
     Checks in all licences on error.
@@ -31,11 +32,26 @@ def reset(uid, sid, e_msg):
     Updates.end(uid, 'ERROR', e_msg)
     logger.warning(e_msg)
 
+
 def split_license_data(text):
     return text.replace("\n\n", "\n").upper().split("USERS OF")
 
+
 def parse_server_info(lines):
     return parse("{:^}:\n{}: LICENSE SERVER {:w} (MASTER) V11.16.2{:^}", lines, case_sensitive=False)
+
+
+def parse_product_info(lines):
+    return parse("{}:  (Total of {:d} {:w} issued;  Total of {:d} {:w} in use)", lines)
+
+
+def parse_version_info(text):
+    return parse('{:^} v{}, vendor: {}, expiry: {}', text, case_sensitive=False)
+
+
+def parse_users_and_workstations(lines):
+    return findall('    {} {} {} (v{}) ({}/{}), start {:w} {:d}/{:d} {:d}:{:d}', lines)
+
 
 def add_product(text, server_id):
     """
@@ -47,7 +63,7 @@ def add_product(text, server_id):
     product = {}
     split_text = text.split("\n")
     data = split_text[0].strip()
-    quantity_result = parse("{}:  (Total of {:d} {:w} issued;  Total of {:d} {:w} in use)", data)
+    quantity_result = parse_product_info(data)
     if quantity_result:
         valid_product = products.get(quantity_result[0], None)
         if valid_product:
@@ -57,12 +73,13 @@ def add_product(text, server_id):
             product['license_out'] = quantity_result[3]
             product['license_total'] = quantity_result[1]
             if len(data) > 0:
-                version_result = parse('{:^} v{}, vendor: {}, expiry: {}', split_text[1].strip(), case_sensitive=False)
+                version_result = parse_version_info(split_text[1].strip())
                 if version_result:
                     product['version'] = version_result[1]
                     product['expires'] = version_result[3]
             return Product.upsert(**product)
     return None
+
 
 def map_product_id(product_id, arr):
     out = []
@@ -71,11 +88,13 @@ def map_product_id(product_id, arr):
         out.append(a)
     return out
 
+
 def add_users_and_workstations(text):
     data = []
     if text:
-        result = findall('{} {} {} (v{}) ({}/{}), start {:w} {:d}/{:d} {:d}:{:d}',
-                         text.replace("\n", "").strip())
+        # result = findall('{} {} {} (v{}) ({}/{}), start {:w} {:d}/{:d} {:d}:{:d}',
+        #                  text.replace("\n", "").strip())
+        result = parse_users_and_workstations(text)
         for r in result:
             user_id = User.add(username=r[0])
             workstation_id = Workstation.add(workstation=r[1])
@@ -83,6 +102,7 @@ def add_users_and_workstations(text):
             data.append(
                 {'user_id': user_id, 'workstation_id': workstation_id, 'time_out': date_4_db})
     return data
+
 
 def read():
     for s in license_servers:

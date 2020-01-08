@@ -1,8 +1,7 @@
-import datetime
 from tests.base import BaseTestCase
 from app.arcgis_config import products
 from app.models import Server, Product, Updates, History, User, Workstation
-
+from app import db
 
 class TestProduct(BaseTestCase):
     def test_upsert(self):
@@ -57,14 +56,16 @@ class TestServer(BaseTestCase):
 
 
 class TestUpdates(BaseTestCase):
-    def test_start(self):
+
+    def test_end(self):
+        # test start update
         start_id = Updates.start(server_id=1)
         self.assertEqual(start_id, 1)
 
-    def test_end(self):
-        Updates.end(1, 'UP', 'test-message')
-        result = Updates.query().filter(id=1).first()
-        self.assertEqual(result, )
-
-
+        # test end update
+        Updates.end(start_id, 'UP', 'test-message')
+        query = Updates.query.order_by(Updates.id.desc()).limit(1).first()
+        self.assertEqual(query.id, 1)
+        self.assertEqual(query.status, 'UP')
+        self.assertEqual(query.info, 'test-message')
 

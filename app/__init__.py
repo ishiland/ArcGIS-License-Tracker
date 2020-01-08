@@ -9,7 +9,6 @@ if flask_env == 'production':
     print("Using Production configuration")
     app.config.from_object('app.config.ProductionConfig')
 else:
-    print("Using Development configuration")
     app.config.from_object('app.config.DevelopmentConfig')
     # Setup the debug toolbar
     from flask_debugtoolbar import DebugToolbarExtension
