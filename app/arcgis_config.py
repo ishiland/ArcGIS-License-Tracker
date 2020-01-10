@@ -11,7 +11,7 @@ license_servers = [
 # Path to the lmutil.exe.
 lm_util = r"C:\Program Files (x86)\ArcGIS\LicenseManager\bin\lmutil.exe"
 
-# list of products to check for and track on license server.
+# list of products to check for and track on license server. Each key is the internal software name.
 products = {
 
     # See https://desktop.arcgis.com/en/license-manager/latest/feature-names-for-arcgis-option-file.htm
@@ -92,7 +92,7 @@ products = {
     'SMPJAPANP': {'common_name': 'StreetMap Premium Japan', 'category': 'ArcGIS Pro', 'type': 'extension'},
 
     # -------------
-    # Entitlements
+    # Entitlements TODO
     # -------------
     # 'SPATIALANALYSTN': {'common_name': 'Spatial Analyst', 'category': 'Entitlement', 'type': 'extension'},
     # 'NETWORKANALYSTN': {'common_name': 'Network Analyst', 'category': 'Entitlement', 'type': 'extension'},

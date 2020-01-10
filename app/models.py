@@ -52,7 +52,6 @@ class Updates(db.Model):
                                                                   "time_complete": datetime.datetime.now()},
                                                                  synchronize_session='fetch')
         db.session.commit()
-        # db.session.close()
 
 
 class Product(db.Model):

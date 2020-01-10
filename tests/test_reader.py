@@ -1,7 +1,7 @@
 import datetime
 from tests.base import BaseTestCase
 from app.read_licenses import split_license_data, parse_server_info, add_product, add_users_and_workstations, \
-    map_product_id, parse_product_info, parse_version_info, parse_users_and_workstations
+    map_product_id, parse_product_info, parse_version_info, parse_users_and_workstations, parse_error_info
 
 
 class TestFunctions(BaseTestCase):
@@ -20,6 +20,15 @@ class TestFunctions(BaseTestCase):
         line = ' DESKTOPBASICP:  (TOTAL OF 10 LICENSES ISSUED;  TOTAL OF 1 LICENSE IN USE)\n  "DESKTOPBASICP" V10.1, VENDOR: ARCGIS, EXPIRY: PERMANENT(NO EXPIRATION DATE)\n  FLOATING LICENSE\n    SHILANDI WIN10-SHILANDI WIN10-SHILANDI (V10.1) (GV-GISLICENSE/27000 531), START MON 12/23 11:55'
         result = add_product(line, server_id=1)
         self.assertEqual(result, 1)
+
+    def test_parse_error_info(self):
+        lines =  'lines lmutil - Copyright (c) 1989-2018 Flexera. All Rights Reserved.\n' \
+                 'Flexible License Manager status on Thu 1/9/2020 14:08\n\n' \
+                 '[Detecting lmgrd processes...]\n' \
+                 'Error getting status: Cannot find license file. (-1,359:2 "No such file or directory")\n'
+        result = parse_error_info(lines)
+        self.assertEqual(result, 'Cannot find license file. (-1,359:2 "No such file or directory")')
+
 
     def test_parse_product_info(self):
         lines = '    SHILANDI WIN10-SHILANDI WIN10-SHILANDI (V10.1) (GV-GISLICENSE/27000 1421), START THU 12/25 11:50\n' \

@@ -3,8 +3,8 @@ ArcGIS License Tracker
 ArcGIS License Tracker is a tool to display current and historical license usage from a concurrent use (floating) license server.
 
 ## Features
-* Access license data through the browser
-* View and export license data - users, products and workstations to multiple file formats. 
+* Access license usage through the browser
+* Export license data - users, products and workstations to multiple file formats. 
 * Support for multiple license servers
 
 ## Requirements
@@ -57,14 +57,14 @@ ArcGIS License Tracker is a tool to display current and historical license usage
 
 
 ## Production deployment
-To run in production mode, set the `FLASK_ENV` variable to `production` then initialize a production database as described above using `python manage.py recreate_db`.
+To run in production mode, set the `FLASK_ENV` variable to `production` then initialize a production database using `python manage.py recreate_db`.
 
 Some helpful guides and tools for deploying to IIS:
  - [GitHub Gist](https://gist.github.com/bparaj/ac8dd5c35a15a7633a268e668f4d2c94)
  - [wfastcgi](https://pypi.org/project/wfastcgi/)
  
  A summary of other deployment options [here](https://flask.palletsprojects.com/en/1.1.x/deploying/)
- 
+
  I have also included a sample web.config for reference. 
  
 ## Tests

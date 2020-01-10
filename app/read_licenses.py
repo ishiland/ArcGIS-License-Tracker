@@ -17,6 +17,7 @@ def check_year(s_id):
         if datetime.now().year != r.time_out.year:
             Product.reset(s_id)
             History.reset(s_id)
+            logger.info('check_year reset for server id {}'.format(s_id))
             break
 
 
@@ -30,8 +31,14 @@ def reset(uid, sid, e_msg):
     Product.reset(sid)
     History.reset(sid)
     Updates.end(uid, 'ERROR', e_msg)
-    logger.warning(e_msg)
+    logger.error(e_msg)
 
+def parse_error_info(lines):
+    result = parse('{:^}Error getting status:{}\n', lines, case_sensitive=False)
+    if result:
+        if len(result.fixed):
+            return result[-1].strip()
+    return None
 
 def split_license_data(text):
     return text.replace("\n\n", "\n").upper().split("USERS OF")
@@ -42,7 +49,7 @@ def parse_server_info(lines):
 
 
 def parse_product_info(lines):
-    return parse("{}:  (Total of {:d} {:w} issued;  Total of {:d} {:w} in use)", lines)
+    return parse("{}:  (Total of {:d} {:w} issued;  Total of {:d} {:w} in use)", lines, case_sensitive=False)
 
 
 def parse_version_info(text):
@@ -50,7 +57,7 @@ def parse_version_info(text):
 
 
 def parse_users_and_workstations(lines):
-    return findall('    {} {} {} (v{}) ({}/{}), start {:w} {:d}/{:d} {:d}:{:d}', lines)
+    return findall('    {} {} {} (v{}) ({}/{}), start {:w} {:d}/{:d} {:d}:{:d}', lines, case_sensitive=False)
 
 
 def add_product(text, server_id):
@@ -92,8 +99,6 @@ def map_product_id(product_id, arr):
 def add_users_and_workstations(text):
     data = []
     if text:
-        # result = findall('{} {} {} (v{}) ({}/{}), start {:w} {:d}/{:d} {:d}:{:d}',
-        #                  text.replace("\n", "").strip())
         result = parse_users_and_workstations(text)
         for r in result:
             user_id = User.add(username=r[0])
@@ -111,49 +116,46 @@ def read():
             server_id = Server.upsert(s['hostname'], s['port'])
             update_id = Updates.start(server_id)
             check_year(server_id)
-
             checked_out_history_ids = []
-
-            process = subprocess.Popen([lm_util, "lmstat", "-f -c {}@{}".format(s['port'], s['hostname'])],
-                                       stdout=subprocess.PIPE, bufsize=1, universal_newlines=True)
+            process = subprocess.Popen([lm_util, "lmstat", "-f", "-c", "{}@{}".format(s['port'], s['hostname'])],
+                                       stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=1, universal_newlines=True)
             lines = process.stdout.read()
-
+            has_error = parse_error_info(lines)
+            if has_error:
+                reset(update_id, server_id, '{}@{}: {}'.format(s['port'], s['hostname'], has_error))
+                raise Exception(has_error)
             license_data = split_license_data(lines)
-
             updates = {'update_id': update_id, 'status': None}
-
             server_information = parse_server_info(lines)
-
             if server_information:
                 updates['status'] = server_information[2]
             else:
                 updates['status'] = "DOWN"
                 reset(update_id, server_id, '{}@{} is DOWN'.format(s['port'], s['hostname']))
-                break
-
+                raise Exception(has_error)
             for lic in license_data:
-
                 split_line = lic.split('FLOATING LICENSE')
-
                 product_id = add_product(split_line[0], server_id=server_id)
                 users_and_workstations = add_users_and_workstations(split_line[-1])
-
                 if product_id and len(users_and_workstations):
                     data = map_product_id(product_id, users_and_workstations)
                     for kwargs in data:
                         history_id = History.add(update_id=update_id, server_id=server_id, **kwargs)
                         checked_out_history_ids.append(history_id)
-
             dt = datetime.now().replace(second=0, microsecond=0)
             checked_out = History.time_in_none(server_id)
             for c in checked_out:
                 if c.id not in checked_out_history_ids:
                     History.update(c.id, dt, server_id)
-
         except Exception as e:
-            info = "{}: {}".format("Error", str(e))
+            info = "{} error: {}".format(s['hostname'], str(e))
             logger.error(str(e))
             pass
         finally:
-            logger.info('Finished reading data from \'{}\''.format(s))
+            logger.info(
+                'Finished reading data from \'{}\'. '
+                'Update details | id:{} | status:{} | info:{}.'.format(s['hostname'],
+                                                                       update_id,
+                                                                       updates['status'],
+                                                                       info))
             Updates.end(update_id, updates['status'], info)

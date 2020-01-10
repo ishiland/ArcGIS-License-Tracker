@@ -35,11 +35,9 @@ def read_once():
     a one-time read from the license server.
     """
     from app.read_licenses import read
-    read_data = read()
-    if not read_data:
-        print('Read completed successfully.')
-    else:
-        print('There was a problem reading from your license server.')
+    read()
+    print('Read completed. Check logs for errors. ')
+
 
 manager.add_command('runserver', Server(threaded=True))
 manager.add_command('shell', Shell(make_context=make_shell_context))
