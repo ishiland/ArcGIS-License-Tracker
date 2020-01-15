@@ -6,14 +6,20 @@ from app.read_licenses import split_license_data, parse_server_info, add_product
 
 class TestFunctions(BaseTestCase):
     def test_parse_server_info(self):
-        result = parse_server_info(self.lines)
+        result = parse_server_info(self.prod_server_data)
+        self.assertEqual(result[2], 'UP')
+
+        result = parse_server_info(self.backup_server_data)
         self.assertEqual(result[2], 'UP')
 
     def test_reset_year(self):
         pass
 
     def test_split_license_data(self):
-        result = split_license_data(self.lines)
+        result = split_license_data(self.prod_server_data)
+        self.assertEqual(len(result), 21)
+
+        result = split_license_data(self.backup_server_data)
         self.assertEqual(len(result), 21)
 
     def test_add_product(self):

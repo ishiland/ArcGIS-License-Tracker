@@ -109,7 +109,12 @@ def add_users_and_workstations(text):
     return data
 
 
-def read():
+def read(license_file=None):
+    """
+    entry point for reading license data from a FlexLM license server.
+    :param license_file: manually pass in a license file in the same format the lmutil.exe displays data.
+    :return:
+    """
     for s in license_servers:
         try:
             info = ''
@@ -117,9 +122,13 @@ def read():
             update_id = Updates.start(server_id)
             check_year(server_id)
             checked_out_history_ids = []
-            process = subprocess.Popen([lm_util, "lmstat", "-f", "-c", "{}@{}".format(s['port'], s['hostname'])],
-                                       stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=1, universal_newlines=True)
-            lines = process.stdout.read()
+            if license_file:
+                with open(license_file) as process:
+                    lines = process.read()
+            else:
+                process = subprocess.Popen([lm_util, "lmstat", "-f", "-c", "{}@{}".format(s['port'], s['hostname'])],
+                                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=1, universal_newlines=True)
+                lines = process.stdout.read()
             has_error = parse_error_info(lines)
             if has_error:
                 reset(update_id, server_id, '{}@{}: {}'.format(s['port'], s['hostname'], has_error))

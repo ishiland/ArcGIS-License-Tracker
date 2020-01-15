@@ -138,9 +138,9 @@ class User(db.Model):
         User.query.filter_by(name=name).delete()
         db.session.commit()
 
-    @staticmethod
-    def distinct_users():
-        return db.session.query(User.name).distinct().all()
+    # @staticmethod
+    # def distinct_users():
+    #     return db.session.query(User.name).distinct().all()
 
 
 class History(db.Model):
@@ -161,6 +161,7 @@ class History(db.Model):
 
     @hybrid_property
     def calculated_timein(self):
+        """Jinja template helper function"""
         if self.time_in:
             return self.time_in
         else:
@@ -199,11 +200,11 @@ class History(db.Model):
                                                 History.time_in == None).update(
             {'time_in': datetime.datetime.now().replace(second=0, microsecond=0)}, synchronize_session='fetch')
 
-    @staticmethod
-    def users_currently_checked_out(server_id):
-        query = db.session.query(User).join(History).join(Product).filter(History.time_in == None,
-                                                                          server_id=server_id).all()
-        return query
+    # @staticmethod
+    # def users_currently_checked_out(server_id):
+    #     query = db.session.query(User).join(History).join(Product).filter(History.time_in == None,
+    #                                                                       server_id=server_id).all()
+    #     return query
 
 
 # ----------------------------------------------------------------------------#

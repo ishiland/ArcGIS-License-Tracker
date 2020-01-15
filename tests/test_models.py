@@ -1,7 +1,6 @@
 from tests.base import BaseTestCase
 from app.arcgis_config import products
 from app.models import Server, Product, Updates, History, User, Workstation
-from app import db
 
 class TestProduct(BaseTestCase):
     def test_upsert(self):
@@ -68,4 +67,9 @@ class TestUpdates(BaseTestCase):
         self.assertEqual(query.id, 1)
         self.assertEqual(query.status, 'UP')
         self.assertEqual(query.info, 'test-message')
+
+
+# class TestMultipleServer(BaseTestCase):
+#     for key, val in products.items():
+#         Product.upsert(1, )
 

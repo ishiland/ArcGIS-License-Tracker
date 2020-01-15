@@ -13,8 +13,12 @@ class BaseTestCase(TestCase):
         db.create_all(bind=None)
         db.session.commit()
 
-        with open(os.path.join(dir_path, 'data.txt')) as data:
-            self.lines = data.read()
+        with open(os.path.join(dir_path, 'data', 'prod-license.txt')) as data:
+            self.prod_server_data = data.read()
+
+        with open(os.path.join(dir_path, 'data', 'backup-license.txt')) as data:
+            self.backup_server_data = data.read()
+
 
     def tearDown(self):
         db.session.remove()
