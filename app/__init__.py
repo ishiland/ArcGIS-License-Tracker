@@ -1,5 +1,7 @@
 import os
 from flask import Flask
+from flask_apscheduler import APScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
 
@@ -18,20 +20,9 @@ else:
 from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy(app)
 
-
-if flask_env != 'development':
-    """
-    Create a scheduler to update license data in background. 
-    Only run this in production since the development reloader will duplicate background tasks.
-    """
-    from app.read_licenses import read
-    from app.arcgis_config import UPDATE_INTERVAL
-    from apscheduler.schedulers.background import BackgroundScheduler
-    import atexit
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(read, trigger='interval', minutes=UPDATE_INTERVAL, max_instances=1)
-    scheduler.start()
-    atexit.register(lambda: scheduler.shutdown(wait=False))
+scheduler = APScheduler(BackgroundScheduler())
+scheduler.init_app(app)
+scheduler.start()
 
 # Import the views
 from app.views import main, error
