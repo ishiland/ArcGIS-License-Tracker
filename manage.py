@@ -1,5 +1,6 @@
 import unittest
 from flask_script import Manager, Shell, Server
+# from app import app, db
 from app import app, db
 
 manager = Manager(app)

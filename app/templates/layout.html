@@ -8,26 +8,26 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.dataTables.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.dataTables.min.css') }}">
     {% block css %}{% endblock %}
-    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/jquery-1.11.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.11.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/app.js') }}"></script>
     <script type="text/javascript"
-            src="{{ url_for('static', filename='js/libs/jquery-ui-1.12.1/jquery-ui.min.js') }}"></script>
+            src="{{ url_for('static', filename='js/jquery-ui-1.12.1/jquery-ui.min.js') }}"></script>
 
-    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/dataTables.min.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/dataTables.buttons.min.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/jszip.min.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/pdfmake.min.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/vfs_fonts.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/buttons.html5.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/dataTables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/dataTables.buttons.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jszip.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/pdfmake.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/vfs_fonts.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/buttons.html5.min.js') }}"></script>
 
-    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/stupidtable.min.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/aWapBE.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/moment.min.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/humanize-duration.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/stupidtable.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/aWapBE.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/moment.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/humanize-duration.js') }}"></script>
     {% block javascript %}{% endblock %}
     <!--[if lt IE 9]>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/selectivizr.js') }}"></script>
-      <!--<script type="text/javascript" src="{{ url_for('static', filename='js/libs/html5shiv.js') }}"></script>-->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/selectivizr.js') }}"></script>
+      <!--<script type="text/javascript" src="{{ url_for('static', filename='js/html5shiv.js') }}"></script>-->
     <![endif]-->
     <script type=text/javascript>
         $SCRIPT_ROOT = {{ request.script_root | tojson | safe }};
@@ -89,7 +89,7 @@
 </div>
 
 <!-- calcite-web js  -->
-<script type="text/javascript" src="{{ url_for('static', filename='js/libs/calcite-web.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/calcite-web.min.js') }}"></script>
 <!-- interactive patterns need to be initialized -->
 <script>
     calcite.init();

@@ -7,22 +7,49 @@ import datetime
 import humanize
 
 
-@app.route('/')
-@app.route('/index')
-@app.route('/dashboard')
-def dashboard():
-    servers = db.session.query(Server).all()
-    user_count = db.session.query(User).count()
-    active_users = db.session.query(User).join(History).filter(History.time_in == None).join(
-        Product).filter(
-        Product.type == 'core').all()
-    workstation_count = db.session.query(Workstation).count()
-    return render_template('index.html',
-                           servers=servers,
-                           active_users=active_users,
-                           workstation_count=workstation_count,
-                           user_count=user_count)
+def serialize_dashboard_data(data):
+    """serializes current license data for the dashboard"""
+    obj = {}
+    for d in data:
+        if d[5] not in obj:
+            obj[d[5]] = {d[2]: {'users': [],
+                                'active': d[3],
+                                'total': d[4]}}
+            if d[6] is None:
+                obj[d[5]][d[2]]['users'].append({'workstation': d[0], 'username': d[1]})
 
+        else:
+            if d[2] not in obj[d[5]]:
+                obj[d[5]][d[2]] = {'users': [],
+                                    'active': d[3],
+                                    'total': d[4]}
+            if d[6] is None:
+                obj[d[5]][d[2]]['users'].append({'workstation': d[0], 'username': d[1]})
+    return obj
+
+@app.route('/dashboard')
+@app.route('/')
+def dashboard():
+    server_count = db.session.query(Server).count()
+    user_count = db.session.query(User).count()
+    workstation_count = db.session.query(Workstation).count()
+    active_user_count = db.session.query(User).join(History).filter(History.time_in == None).join(
+        Product).filter( Product.type == 'core').count()
+
+    active = db.session.query(Workstation.name, User.name, Product.common_name, Product.license_out,
+                              Product.license_total, Server.name, History.time_in). \
+        filter(History.user_id == User.id,
+               History.update_id == Updates.id,
+               History.workstation_id == Workstation.id,
+               History.product_id == Product.id).all()
+
+    detail = serialize_dashboard_data(active)
+    return render_template('index.html',
+                           server_count=server_count,
+                           user_count=user_count,
+                           active_user_count=active_user_count,
+                           workstation_count=workstation_count,
+                           detail=detail)
 
 @app.route('/data/server/availability')
 def server_availability():

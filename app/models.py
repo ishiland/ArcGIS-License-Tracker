@@ -161,7 +161,7 @@ class History(db.Model):
 
     @hybrid_property
     def calculated_timein(self):
-        """Jinja template helper function"""
+        '''J'''
         if self.time_in:
             return self.time_in
         else:

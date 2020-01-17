@@ -168,3 +168,7 @@ def read(license_file=None):
                                                                        updates['status'],
                                                                        info))
             Updates.end(update_id, updates['status'], info)
+
+
+# if __name__ == '__main__':
+#     read()

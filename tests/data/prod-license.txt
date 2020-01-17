@@ -34,7 +34,7 @@ Users of ARC/INFO:  (Total of 13 licenses issued;  Total of 4 licenses in use)
     alf COMPUTER-1 ,_6!/#bE-mN*5kgRxhN~xU (v10.1) (prod-license/27000 412), start Wed 12/18 18:33
     ted COMPUTER-3  ,?UAH<iz>]_#:RNDjP8yjE6 (v10.1) (prod-license/27000 131), start Mon 12/23 12:27
     gus WIN10-COMPUTER ,?UAH<Xt/TKm)-)m?{i@0n (v10.1) (prod-license/27000 1408), start Mon 12/23 14:54
-    lin WIN07-COMPUTER ,?UAH<Xt/TKm)|YIp`Dwf (v10.1) (prod-license/27000 104), start Thu 1/2 9:54
+    linda WIN07-COMPUTER ,?UAH<Xt/TKm)|YIp`Dwf (v10.1) (prod-license/27000 104), start Thu 1/2 9:54
 
 Users of ArcStorm:  (Total of 13 licenses issued;  Total of 0 licenses in use)
 
@@ -47,13 +47,13 @@ Users of desktopBasicP:  (Total of 10 licenses issued;  Total of 7 license in us
   "desktopBasicP" v10.1, vendor: ARCGIS, expiry: permanent(no expiration date)
   floating license
 
-    gus COMPUTER-12 ,_6!/#bE-mN*5kgRxhN~xU (v10.1) (prod-license/27000 412), start Wed 12/18 18:33
-    bob COMPUTER-3  ,?UAH<iz>]_#:RNDjP8yjE6 (v10.1) (prod-license/27000 131), start Mon 12/23 12:27
-    lin WIN10-COMPUTER ,?UAH<Xt/TKm)-)m?{i@0n (v10.1) (prod-license/27000 1408), start Mon 12/23 14:54
-    joy WIN07-COMPUTER ,?UAH<Xt/TKm)|YIp`Dwf (v10.1) (prod-license/27000 104), start Thu 1/2 9:54
-    moe WIN07-COMPUTER-2 ,?UAH<Xt/TKm)|YIp`Dwf (v10.1) (prod-license/27000 104), start Thu 1/2 9:54
-    pam WIN07-COMPUTER-4 ,?UAH<Xt/TKm)|YIp`Dwf (v10.1) (prod-license/27000 104), start Thu 1/2 9:54
-    amy WIN10-COMPUTER-22 ,?UAH<Xt/TKm)|YIp`Dwf (v10.1) (prod-license/27000 104), start Thu 1/2 9:54
+    gus COMPUTER-12 ,_6!/#bE-mN*5kgRxhN~xU (v10.1) (prod-license/27000 412), start Wed 12/18 18:01
+    bob COMPUTER-3  ,?UAH<iz>]_#:RNDjP8yjE6 (v10.1) (prod-license/27000 131), start Mon 12/23 12:24
+    lin WIN10-COMPUTER ,?UAH<Xt/TKm)-)m?{i@0n (v10.1) (prod-license/27000 1408), start Mon 12/23 14:59
+    joy WIN07-COMPUTER ,?UAH<Xt/TKm)|YIp`Dwf (v10.1) (prod-license/27000 104), start Thu 1/2 9:25
+    moe WIN07-COMPUTER-2 ,?UAH<Xt/TKm)|YIp`Dwf (v10.1) (prod-license/27000 104), start Thu 1/2 9:30
+    pam WIN07-COMPUTER-4 ,?UAH<Xt/TKm)|YIp`Dwf (v10.1) (prod-license/27000 104), start Thu 1/2 9:46
+    bess WIN10-COMPUTER-22 ,?UAH<Xt/TKm)|YIp`Dwf (v10.1) (prod-license/27000 104), start Thu 1/2 9:51
 
 Users of Grid:  (Total of 2 licenses issued;  Total of 0 licenses in use)
 
