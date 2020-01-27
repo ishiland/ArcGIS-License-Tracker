@@ -23,16 +23,13 @@ def serialize_dashboard_data(data):
                                     'total': d[4]}
             if d[6] is None:
                 obj[d[5]][d[2]]['users'].append({'workstation': d[0], 'username': d[1]})
+
     return obj
 
 
-active = db.session.query(Workstation.name, User.name, Product.common_name, Product.license_out, Product.license_total, Server.name, History.time_in). \
-    filter(History.user_id == User.id,
-    History.update_id == Updates.id,
-    History.workstation_id == Workstation.id,
-    History.product_id == Product.id).all()
+all_products = db.session.query(Product.common_name, Product.license_out, Product.license_total, Server.name).filter(Product.server_id==Server.id).all()
 
-r = active
+for a in all_products:
+    print(dir(a))
 
-pprint(serialize_dashboard_data(r))
 

@@ -7,7 +7,11 @@ SCHEDULER_JOBS = [
         'id': 'read',
         'func': 'app.read_licenses:read',
         'trigger': 'interval',
-        'minutes': UPDATE_INTERVAL
+        'minutes': UPDATE_INTERVAL,
+        'misfire_grace_time': 5,
+        'max_instances': 1,
+        'replace_existing': False,
+        'coalesce': True
     }
 ]
 

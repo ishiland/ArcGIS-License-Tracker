@@ -5,6 +5,9 @@ from app.arcgis_config import products, license_servers, lm_util
 from app.models import Server, Product, Updates, History, User, Workstation
 from app.logger_setup import logger
 
+# from app import scheduler
+
+# scheduler.start()
 
 def check_year(s_id):
     """
@@ -115,6 +118,7 @@ def read(license_file=None):
     :param license_file: manually pass in a license file in the same format the lmutil.exe displays data.
     :return:
     """
+    # with scheduler.app.app_context():
     for s in license_servers:
         try:
             info = ''
@@ -168,7 +172,3 @@ def read(license_file=None):
                                                                        updates['status'],
                                                                        info))
             Updates.end(update_id, updates['status'], info)
-
-
-# if __name__ == '__main__':
-#     read()

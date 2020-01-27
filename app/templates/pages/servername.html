@@ -2,10 +2,6 @@
 
 {% block title %} Servers {% endblock %}
 
-{% block javascript %}
-    <script type="text/javascript" src="{{ url_for('static', filename='js/chartjs/Chart.bundle.js') }}"></script>
-{% endblock %}
-
 {% block banner %}
     <a href="{{ url_for('servers') }}" style="color:inherit">License Servers</a> / {{ request.path.split('/')[-1] }}
 {% endblock %}
@@ -49,10 +45,6 @@
                             <span class="icon-ui-check-mark icon-ui-green font-size-2">{{ status.Server.name }} is up.</span>
                             <br>
                             Last updated {{ status.Updates.time_complete | relative_time }}.
-{#                        {% elif status.Updates.status == 'UPDATING' %}#}
-{#                            <span class="icon-ui-refresh icon-ui-green font-size-2">Updating {{ status.Server.name  }}</span>#}
-{#                            <br>#}
-{#                            Please refresh your browser in a few moments to reflect recent data.#}
                         {% else %}
                             <span class="icon-ui-notice-round icon-ui-orange font-size-2">Check {{ status.Server.name  }}</span>
                             <br>

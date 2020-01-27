@@ -32,6 +32,7 @@ def serialize_dashboard_data(data):
 def dashboard():
     server_count = db.session.query(Server).count()
     user_count = db.session.query(User).count()
+    product_count = db.session.query(Product).count()
     workstation_count = db.session.query(Workstation).count()
     active_user_count = db.session.query(User).join(History).filter(History.time_in == None).join(
         Product).filter( Product.type == 'core').count()
@@ -48,6 +49,7 @@ def dashboard():
                            server_count=server_count,
                            user_count=user_count,
                            active_user_count=active_user_count,
+                           product_count=product_count,
                            workstation_count=workstation_count,
                            detail=detail)
 
@@ -93,18 +95,25 @@ def active_users():
     return active
 
 
-@app.route('/products/<servername>/<productname>')
-def productname(servername, productname, days=3):
+@app.route('/products')
+def products():
+    all_products = db.session.query(Product.common_name, Product.license_out, Product.license_total, Server.name).filter(Product.server_id==Server.id).all()
+    return render_template('pages/products.html',
+                           products=all_products)
+
+
+@app.route('/products/<server_name>/<product_name>', methods=['GET', 'POST'])
+def product_name(server_name, product_name):
     users = db.session.query(User.name, History.time_in,
                              func.sum(func.julianday(func.ifnull(History.calculated_timein,
                                                                  datetime.datetime.now())) - func.julianday(
                                  History.time_out)).label('time_sum')). \
         filter(User.id == History.user_id). \
         filter(History.product_id == Product.id). \
-        filter(Product.common_name == productname). \
+        filter(Product.common_name == product_name). \
         distinct(User.name).group_by(User.name).all()
 
-    days = datetime.datetime.utcnow() - datetime.timedelta(days=days)
+    # days = datetime.datetime.utcnow() - datetime.timedelta(days=days)
 
     chart_data = db.session.query(func.count(History.user_id).label('users'), Product.license_total,
                                   extract('month', History.time_out).label('m'),
@@ -113,17 +122,17 @@ def productname(servername, productname, days=3):
         filter(Product.id == History.product_id). \
         filter(Server.id == Updates.server_id). \
         filter(Updates.id == History.update_id). \
-        filter(Server.name == servername). \
-        filter(History.time_out > days). \
-        filter(Product.common_name == productname). \
+        filter(Server.name == server_name). \
+        filter(Product.common_name == product_name). \
         distinct(History.user_id). \
         group_by(Product.common_name, Server.name, 'm', 'd', 'y'). \
         order_by(desc('y')).order_by(desc('m')).order_by(desc('d')).all()
+    #  filter(History.time_out > days).
 
     info = db.session.query(Product). \
         filter(Server.id == Product.server_id). \
-        filter(Server.name == servername). \
-        filter(Product.common_name == productname).first()
+        filter(Server.name == server_name). \
+        filter(Product.common_name == product_name).first()
     return render_template('pages/productname.html',
                            users=users,
                            chart_data=chart_data,

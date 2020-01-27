@@ -37,7 +37,7 @@ def read_once():
     """
     from app.read_licenses import read
     read()
-    print('Read completed. Check logs for errors. ')
+    print('Read completed.')
 
 
 manager.add_command('runserver', Server(threaded=True))

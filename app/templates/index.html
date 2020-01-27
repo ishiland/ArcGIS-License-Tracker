@@ -13,14 +13,14 @@
     </script>
 
     <!-- Top row -->
-    <div class="block-group block-group-4-up tablet-block-group-2-up phone-block-group-1-up dashbuttons">
+    <div class="block-group block-group-5-up tablet-block-group-4-up phone-block-group-1-up dashbuttons">
 
         <!--Active User Count-->
         <div class="card card-bar-green block trailer-1 card-hover">
             <a href="{{ url_for('users') }}">
                 <div class="card-content">
                     <div class="trailer-half">
-                        <span class="icon-ui-user icon-ui-green font-size-7"></span>
+                        <span class="icon-ui-user icon-ui-green font-size-6"></span>
                         <span class="text-right font-size-7">
                             {% if active_user_count %}
                                 {{ active_user_count }}
@@ -40,7 +40,7 @@
             <a href="{{ url_for('users') }}">
                 <div class="card-content">
                     <div class="trailer-half">
-                        <span class="icon-ui-group icon-ui-orange font-size-7"></span>
+                        <span class="icon-ui-group icon-ui-orange font-size-6"></span>
                         <span class="text-right font-size-7">
                             {% if user_count %}
                                 {{ user_count }}
@@ -60,7 +60,7 @@
             <a href="{{ url_for('workstations') }}">
                 <div class="card-content">
                     <div class="trailer-half">
-                        <span class="icon-ui-dock-bottom icon-ui-blue font-size-7"></span>
+                        <span class="icon-ui-dock-bottom icon-ui-blue font-size-6"></span>
                         <span class="text-right font-size-7">
                             {% if workstation_count %}
                                 {{ workstation_count }}
@@ -74,13 +74,31 @@
             </a>
         </div>
 
+        <!--Product Count-->
+        <div class="card card-bar-light-blue block trailer-1 card-hover">
+            <a href="{{ url_for('products') }}">
+                <div class="card-content">
+                    <div class="trailer-half">
+                        <span class="icon-ui-applications icon-ui-light-blue font-size-6"></span>
+                        <span class="text-right font-size-7">
+                            {% if product_count %}
+                                {{ product_count }}
+                            {% else %}
+                                0
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="font-size-2">{{ pluralize(workstation_count, 'Total Product') }}</div>
+                </div>
+            </a>
+        </div>
 
         <!--License Server Count-->
         <div class="card card-bar-purple block trailer-1 card-hover">
             <a href="{{ url_for('servers') }}">
                 <div class="card-content">
                     <div class="trailer-half">
-                        <span class="icon-ui-settings2 icon-ui-purple font-size-7"></span>
+                        <span class="icon-ui-settings2 icon-ui-purple font-size-6"></span>
                         <span class="text-right font-size-7">
                             {% if server_count %}
                                 {{ server_count }}
@@ -98,47 +116,53 @@
 
     {% if detail %}
         {% for server_key, server_value in detail.items() %}
-            <div class="panel trailer-1">
-                <h4 class="font-size-2">{{ server_key }}</h4>
-                <div class="grid-container leader-half trailer-half">
-                    <div class="column-24">
-                        <div class="block-group block-group-4-up">
-                            {% for product_key, product_value in server_value.items() %}
-                                <div class="card {{ 'card-bar-dark-blue' if  product_value['active'] == 0  else 'card-bar-green' }} block">
-                                    <div class="card-content">
-                                        <div class="font-size-1 trailer-half">{{ product_key }}</div>
-                                        <div class="trailer-half">
-                                            <mark class="label {{ 'label-yellow' if  product_value['active'] == product_value['total'] else '' }} modifier-class">{{ product_value['total'] - product_value['active'] }}
-                                                of {{ product_value['total'] }} available
-                                            </mark>
-                                        </div>
-                                        <div>
-                                            {% if  product_value['users'] | length %}
-                                                Current Users
-                                                <table class="table overflow-auto">
-                                                    <thead>
-                                                    <tr>
-                                                        <th>Name</th>
-                                                        <th>Workstation</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    {% for user in product_value['users'] %}
+            <div class="card card-wide">
+                <div class="card-content padding-left-0 padding-right-0">
+                    <div class="panel panel"><h4 class="font-size-2 trailer-0">{{ server_key }}</h4></div>
+                    <div class="grid-container leader-half trailer-half">
+                        <div class="column-24">
+                            <div class="block-group block-group-4-up">
+                                {% for product_key, product_value in server_value.items() %}
+                                    <div class="card {{ 'card-bar-dark-blue' if  product_value['active'] == 0  else 'card-bar-green' }} block">
+                                        <div class="card-content">
+                                            <div class="font-size-1 trailer-half">{{ product_key }}</div>
+                                            <div class="trailer-half">
+                                                <mark class="label {{ 'label-yellow' if  product_value['active'] == product_value['total'] else '' }} modifier-class">{{ product_value['total'] - product_value['active'] }}
+                                                    of {{ product_value['total'] }} available
+                                                </mark>
+                                            </div>
+                                            <div>
+                                                {% if  product_value['users'] | length %}
+                                                    Current Users
+                                                    <table class="table overflow-auto">
+                                                        <thead>
                                                         <tr>
-                                                            <td>{{ user['username'] }}</td>
-                                                            <td>{{ user['workstation'] }}</td>
+                                                            <th>Name</th>
+                                                            <th>Workstation</th>
                                                         </tr>
-                                                    {% endfor %}
-                                                    </tbody>
-                                                </table>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for user in product_value['users'] %}
+                                                            <tr>
+                                                                <td>
+                                                                    <a href="{{ url_for('username', username= user['username'] ) }}">{{ user['username'] }}</a>
+                                                                </td>
+                                                                <td>
+                                                                    <a href="{{ url_for('workstationname', workstationname= user['workstation']  ) }}">{{ user['workstation'] }}</a>
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
 
-                                            {% else %}
-                                                No Current Users
-                                            {% endif %}
+                                                {% else %}
+                                                    No Current Users
+                                                {% endif %}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            {% endfor %}
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -2,6 +2,7 @@
 <html lang="en">
 	<head>
     <title>ArcGIS License Tracker - {% block title %}{% endblock %}</title>
+    <meta http-equiv="refresh" content="60"/>
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/calcite-web.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
@@ -52,6 +53,9 @@
                     <a {% if request.endpoint== 'workstations' %} class='top-nav-link is-active' {% else %}
                     class='top-nav-link' {% endif %}
                     href="{{ url_for('workstations') }}">Workstations</a>
+                    <a {% if request.endpoint== 'products' %} class='top-nav-link is-active' {% else %}
+                    class='top-nav-link' {% endif %}
+                    href="{{ url_for('products') }}">Products</a>
                     <a {% if request.endpoint== 'servers' %} class='top-nav-link is-active' {% else %}
                     class='top-nav-link' {% endif %}
                     href="{{ url_for('servers') }}">License Servers</a>
