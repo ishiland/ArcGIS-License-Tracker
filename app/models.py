@@ -53,6 +53,14 @@ class Updates(db.Model):
                                                                  synchronize_session='fetch')
         db.session.commit()
 
+    @staticmethod
+    def clear():
+        db.session.query(Updates).filter_by(Updates.time_complete != None).update({"status": "UP",
+                                                                  "info": ""},
+                                                                 synchronize_session='fetch')
+        db.session.commit()
+
+
 
 class Product(db.Model):
     __table_args__ = (
@@ -161,7 +169,6 @@ class History(db.Model):
 
     @hybrid_property
     def calculated_timein(self):
-        '''J'''
         if self.time_in:
             return self.time_in
         else:

@@ -10,7 +10,7 @@
         <div class="column-18">
             <div class="card block trailer-1">
                 <div class="panel">
-                    <div class="panel-header">Issue History</div>
+                    <div class="panel-header">Update Log</div>
                     {% if history %}
                         <table id='server-history'>
                             <thead>
@@ -30,6 +30,9 @@
                             {% endfor %}
                             </tbody>
                         </table>
+                        <div>
+                            <a class="btn" href="{{ url_for('clear_log') }}">Clear Log</a>
+                        </div>
                     {% else %}
                         No issues found.
                     {% endif %}
@@ -46,7 +49,7 @@
                             <br>
                             Last updated {{ status.Updates.time_complete | relative_time }}.
                         {% else %}
-                            <span class="icon-ui-notice-round icon-ui-orange font-size-2">Check {{ status.Server.name  }}</span>
+                            <span class="icon-ui-notice-round icon-ui-orange font-size-2">Check {{ status.Server.name }}</span>
                             <br>
                             Last updated {{ status.Updates.time_complete  | relative_time }}.
                         {% endif %}
@@ -59,7 +62,8 @@
                 <div class="panel">
                     <div class="panel-header">Additional Info</div>
                     <p>Tracking this license server began <strong>
-                        {% if start_date %}{{ start_date.time_start | relative_time }}</strong>{% else %} - {% endif %}.</p>
+                        {% if start_date %}{{ start_date.time_start | relative_time }}</strong>{% else %} - {% endif %}.
+                    </p>
                     <a class="js-modal-toggle btn" href="#" data-modal="server-users">
                         View Users (<strong>{% if users %}{{ users | length }}{% else %}0{% endif %}</strong>)</a>
                 </div>
@@ -77,17 +81,18 @@
             </a>
             <h3 class='trailer-half'>{{ server_status }} users</h3>
             {% if users %}
-<table class="modifier-class table-striped display trailer-1" id="server-users-table" cellspacing="0" width="100%">
-                <thead>
-                <tr>
-                    <th>User</th>
-                    <th>Last Use</th>
-                </tr>
-                </thead>
+                <table class="modifier-class table-striped display trailer-1" id="server-users-table" cellspacing="0"
+                       width="100%">
+                    <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Last Use</th>
+                    </tr>
+                    </thead>
                     <tbody>
                     {% for u in users %}
                         <tr class='clickable-row' data-href="{{ url_for('username', username=u.User.name) }}">
-                                                        <td>{{ u.User.name }}</td>
+                            <td>{{ u.User.name }}</td>
                             {% if u.History.time_in == None %}
                                 <td><span class="icon-ui-check-mark icon-ui-green font-size-1"> Active</span></td>
                             {% else %}
@@ -96,7 +101,7 @@
                         </tr>
                     {% endfor %}
                     </tbody>
-            </table>
+                </table>
             {% else %}
                 No users found.
             {% endif %}

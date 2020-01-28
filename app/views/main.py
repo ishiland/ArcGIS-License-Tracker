@@ -1,4 +1,4 @@
-from flask import render_template, jsonify, request
+from flask import render_template, make_response, jsonify, request
 from sqlalchemy import desc, asc, func, extract, and_
 from app import app, db
 from app.models import User, Product, Server, Updates, History, Workstation, AlchemyEncoder
@@ -42,6 +42,7 @@ def dashboard():
         filter(History.user_id == User.id,
                History.update_id == Updates.id,
                History.workstation_id == Workstation.id,
+               Product.server_id == Server.id,
                History.product_id == Product.id).all()
 
     detail = serialize_dashboard_data(active)
@@ -102,63 +103,66 @@ def products():
                            products=all_products)
 
 
-@app.route('/products/<server_name>/<product_name>', methods=['GET', 'POST'])
-def product_name(server_name, product_name):
+@app.route('/products/<product_name>')
+def productname(product_name):
     users = db.session.query(User.name, History.time_in,
+                             Server.name.label('servername'),
                              func.sum(func.julianday(func.ifnull(History.calculated_timein,
                                                                  datetime.datetime.now())) - func.julianday(
                                  History.time_out)).label('time_sum')). \
         filter(User.id == History.user_id). \
         filter(History.product_id == Product.id). \
+        filter(Product.server_id == Server.id). \
         filter(Product.common_name == product_name). \
         distinct(User.name).group_by(User.name).all()
 
     # days = datetime.datetime.utcnow() - datetime.timedelta(days=days)
 
-    chart_data = db.session.query(func.count(History.user_id).label('users'), Product.license_total,
-                                  extract('month', History.time_out).label('m'),
-                                  extract('day', History.time_out).label('d'),
-                                  extract('year', History.time_out).label('y')). \
-        filter(Product.id == History.product_id). \
-        filter(Server.id == Updates.server_id). \
-        filter(Updates.id == History.update_id). \
-        filter(Server.name == server_name). \
-        filter(Product.common_name == product_name). \
-        distinct(History.user_id). \
-        group_by(Product.common_name, Server.name, 'm', 'd', 'y'). \
-        order_by(desc('y')).order_by(desc('m')).order_by(desc('d')).all()
+    # chart_data = db.session.query(func.count(History.user_id).label('users'), Product.license_total,
+    #                               extract('month', History.time_out).label('m'),
+    #                               extract('day', History.time_out).label('d'),
+    #                               extract('year', History.time_out).label('y')). \
+    #     filter(Product.id == History.product_id). \
+    #     filter(Server.id == Updates.server_id). \
+    #     filter(Updates.id == History.update_id). \
+    #     filter(Server.name == server_name). \
+    #     filter(Product.common_name == product_name). \
+    #     distinct(History.user_id). \
+    #     group_by(Product.common_name, Server.name, 'm', 'd', 'y'). \
+    #     order_by(desc('y')).order_by(desc('m')).order_by(desc('d')).all()
     #  filter(History.time_out > days).
 
-    info = db.session.query(Product). \
-        filter(Server.id == Product.server_id). \
-        filter(Server.name == server_name). \
-        filter(Product.common_name == product_name).first()
+    # info = db.session.query(Product). \
+    #     filter(Server.id == Product.server_id). \
+    #     filter(Server.name == server_name). \
+    #     filter(Product.common_name == product_name).first()
     return render_template('pages/productname.html',
                            users=users,
-                           chart_data=chart_data,
-                           info=info)
+                           # chart_data=chart_data,
+                           # info=info
+                           )
 
 
-@app.route('/_productchart')
-def productchart():
-    selection = request.args.get('days')
-    servername = request.args.get('servername')
-    productname = request.args.get('productname')
-    days = datetime.datetime.utcnow() - datetime.timedelta(days=int(selection))
-    chart_data = db.session.query(func.count(History.user_id).label('users'), Product.license_total,
-                                  extract('month', History.time_out).label('m'),
-                                  extract('day', History.time_out).label('d'),
-                                  extract('year', History.time_out).label('y')). \
-        filter(Product.id == History.product_id). \
-        filter(Server.id == Updates.server_id). \
-        filter(Updates.id == History.update_id). \
-        filter(Server.name == servername). \
-        filter(History.time_out > days). \
-        filter(Product.common_name == productname). \
-        distinct(History.user_id). \
-        group_by(Product.common_name, Server.name, 'm', 'd', 'y'). \
-        order_by(desc('y')).order_by(desc('m')).order_by(desc('d')).all()
-    return jsonify(result=chart_data)
+# @app.route('/_productchart')
+# def productchart():
+#     selection = request.args.get('days')
+#     servername = request.args.get('servername')
+#     productname = request.args.get('productname')
+#     days = datetime.datetime.utcnow() - datetime.timedelta(days=int(selection))
+#     chart_data = db.session.query(func.count(History.user_id).label('users'), Product.license_total,
+#                                   extract('month', History.time_out).label('m'),
+#                                   extract('day', History.time_out).label('d'),
+#                                   extract('year', History.time_out).label('y')). \
+#         filter(Product.id == History.product_id). \
+#         filter(Server.id == Updates.server_id). \
+#         filter(Updates.id == History.update_id). \
+#         filter(Server.name == servername). \
+#         filter(History.time_out > days). \
+#         filter(Product.common_name == productname). \
+#         distinct(History.user_id). \
+#         group_by(Product.common_name, Server.name, 'm', 'd', 'y'). \
+#         order_by(desc('y')).order_by(desc('m')).order_by(desc('d')).all()
+#     return jsonify(result=chart_data)
 
 
 @app.route('/users')
@@ -245,6 +249,13 @@ def servername(servername):
                            history=history,
                            users=users,
                            start_date=first_update)
+
+def clear_log():
+    try:
+        Updates.clear()
+        return make_response('ok', 200)
+    except Exception as e:
+        return make_response(str(e), 500)
 
 
 @app.route('/workstations')

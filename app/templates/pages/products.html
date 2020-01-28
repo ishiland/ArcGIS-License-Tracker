@@ -2,11 +2,6 @@
 
 {% block title %} Products {% endblock %}
 
-{% block css %}
-
-{% endblock %}
-
-
 {% block banner %} Products {% endblock %}
 
 {% block content %}
@@ -28,7 +23,7 @@
                     <tbody>
                     {% for product in products %}
                         <tr class='clickable-row'
-{#                            data-href="{{ url_for('product_name', sever_name=product.name, product_name=product.common_name) }}"#}
+                            data-href="{{ url_for('productname', product_name=product.common_name) }}"
                         >
                             <td data-sort="{{ product.common_name }}">{{ product.common_name }}</td>
                             <td data-sort="{{ product.license_out }}">{{ product.license_out }}</td>

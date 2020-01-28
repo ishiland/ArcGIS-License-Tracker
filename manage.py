@@ -2,6 +2,7 @@ import unittest
 from flask_script import Manager, Shell, Server
 # from app import app, db
 from app import app, db
+from fake_populate import populate
 
 manager = Manager(app)
 
@@ -17,6 +18,15 @@ def recreate_db():
     db.create_all()
     db.session.commit()
     print("recreated the database")
+
+@manager.command
+def fake_populate():
+    """
+    Load dummy data into db
+    """
+    recreate_db()
+    populate()
+    print("populated database with dummy data")
 
 @manager.command
 def test():
