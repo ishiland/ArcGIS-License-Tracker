@@ -1,7 +1,4 @@
 
-# Update interval in minutes to read from license server
-UPDATE_INTERVAL = 1
-
 # license server names and ports. Default port is 27000.
 license_servers = [
     {"hostname": "gv-gislicense", "port": "27000"},

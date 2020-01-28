@@ -1,8 +1,7 @@
 import unittest
 from flask_script import Manager, Shell, Server
-# from app import app, db
 from app import app, db
-from fake_populate import populate
+from app.fake_populate import populate
 
 manager = Manager(app)
 

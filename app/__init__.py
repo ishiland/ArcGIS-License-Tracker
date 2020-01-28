@@ -1,7 +1,5 @@
 import os
 from flask import Flask
-from flask_apscheduler import APScheduler
-from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
 
@@ -19,9 +17,6 @@ else:
 # Setup the database
 from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy(app)
-
-# scheduler = APScheduler(BackgroundScheduler())
-# scheduler.init_app(app)
 
 # Import the views
 from app.views import main, error

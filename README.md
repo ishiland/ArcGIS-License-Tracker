@@ -32,7 +32,6 @@ ArcGIS License Tracker is a tool to display current and historical license usage
   ```
   
 4. In `app/arcgis_config.py`, configure the following:
-  * `UPDATE_INTERVAL` - Frequency to collect license data. Default is every 5 minutes.
   * `license_servers` - List of license servers to track. The default port is 27000.
   * `lm_util` - Path to your lmutil.exe. 
     
