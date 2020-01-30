@@ -46,7 +46,8 @@ ArcGIS License Tracker is a tool to display current and historical license usage
   ```
   > python manage.py read_once
   ```
-
+   Make sure there are no errors at this step.
+  
 7. Run the development server:
   ```
   > python manage.py runserver
@@ -54,11 +55,19 @@ ArcGIS License Tracker is a tool to display current and historical license usage
 
 8. Navigate to [http://localhost:5000](http://localhost:5000)
 
+## Production
+After successfully testing in development, set the `FLASK_ENV` variable to `production` then initialize a production database using `python manage.py recreate_db`.
 
-## Production deployment
-To run in production mode, set the `FLASK_ENV` variable to `production` then initialize a production database using `python manage.py recreate_db`.
+### Task Scheduler
+Setup a scheduled task to read license data at your desired intervals. The `read_once` command has been tested to run every minute without any issues.  
 
-Some helpful guides and tools for deploying to IIS:
+In Task Scheduler, you will want to configure the 'Action' similiar to this:
+ - *Program/script*: path the to python executable in your virtual environment
+ - *Add arguments:* `manage.py read_once`
+ - *Start in*: The root directory of the application where the `manage.py` file is.  Ex. `C:\inetpub\wwwroot\arcgis-license-tracker\`
+
+### Deploy
+Deploy to a production web server. Here are some helpful guides and tools for deploying to IIS:
  - [GitHub Gist](https://gist.github.com/bparaj/ac8dd5c35a15a7633a268e668f4d2c94)
  - [wfastcgi](https://pypi.org/project/wfastcgi/)
  
@@ -67,11 +76,8 @@ There is also a sample web.config for reference included in this repo. A summary
 ## Tests
 Tests can be ran using `python manage.py test`
 
-## Development
-A few things - 
- - To specify a development environment, open a powershell window and enter the following:
-   `$env:FLASK_ENV = "development"`
- - When running in the dev environment, the app will not automatically start a background process for license reading. This is because the development server will spawn a duplicate background process due to the flask "reloader" feature. The command `python manage.py read_once` will run a one-time read process.  
+## Further Thoughts
+ - It would be good to have this running with a library like [ApScheduler](https://github.com/agronholm/apscheduler) for ease of setup but I ran out of time trying to get it working in production w/IIS.  Windows Task Scheduler is an extra step but seems to work fine. 
  - The database design is as follows:
     
    ![alt text](database.PNG "Database Diagram")

@@ -12,14 +12,14 @@
         <div class="column-18">
             <div class="card block trailer-half">
                 <div class="panel modifier-class">
-                    <div class="panel-header">All User History</div>
+                    <div class="panel-header">{{ request.path.split('/')[-1] | replace('-', ' ') }} Usage</div>
                     {% if users %}
                         <table class="modifier-class table-striped display trailer-1" id="user-table" cellspacing="0"
                                width="100%">
                         <thead>
                         <tr>
                             <th>User</th>
-                            <th>Total Time</th>
+                            <th>Cumulative Time</th>
                             <th>Last Use</th>
                             <th>License Server</th>
                         </tr>
