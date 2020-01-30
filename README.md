@@ -15,43 +15,43 @@ ArcGIS License Tracker is a tool to display current and historical license usage
 ## Getting Started
 
 1. Clone the repo
-  ```
-  > git clone https://github.com/ishiland/arcgis-license-tracker.git
-  > cd arcgis-license-tracker
-  ```
+    ```
+    > git clone https://github.com/ishiland/arcgis-license-tracker.git
+    > cd arcgis-license-tracker
+    ```
 
 2. Initialize and activate a virtualenv:
-  ```
-  > python -m virtualenv venv
-  > venv\Scripts\activate
-  ```
+    ```
+    > python -m virtualenv venv
+    > venv\Scripts\activate
+    ```
 
 3. Install the dependencies:
-  ```
-  > pip install -r requirements.txt
-  ```
-  
+    ```
+    > pip install -r requirements.txt
+    ```
+
 4. In `app/arcgis_config.py`, configure the following:
-  * `license_servers` - List of license servers to track. The default port is 27000.
-  * `lm_util` - Path to your lmutil.exe. 
+    * `license_servers` - List of license servers to track. The default port is 27000.
+    * `lm_util` - Path to your lmutil.exe. 
     
 5. Initialize the database
-
-  Initialize the database using:
-  ```
-  > python manage.py recreate_db
-  ```
+    
+    Initialize the database using:
+    ```
+    > python manage.py recreate_db
+    ```
 
 6. Test your license server configuration:
-  ```
-  > python manage.py read_once
-  ```
-   Make sure there are no errors at this step.
+    ```
+    > python manage.py read_once
+    ```
+    Make sure there are no errors at this step.
   
 7. Run the development server:
-  ```
-  > python manage.py runserver
-  ```
+    ```
+    > python manage.py runserver
+    ```
 
 8. Navigate to [http://localhost:5000](http://localhost:5000)
 
