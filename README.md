@@ -1,18 +1,18 @@
 ArcGIS License Tracker
 ============
-ArcGIS License Tracker is a tool to display current and historical license usage from a concurrent use (floating) license server.
+A web application to display current and historical license usage from a concurrent use (floating) license server.
 
 ![App Preview](preview.png)
 
 ## Features
-* Access current and historical license usage through the browser
+* Easily view current and historical license usage
 * Export license data - users, products and workstations to multiple file formats. 
 * Support for multiple license servers
 
 ## Requirements
  * Python >= 3.6
  * Windows OS
- * Local access to the `lmutil.exe` included with the license server. The default location of this command line tool is in `C:\Program Files (x86)\ArcGIS\LicenseManager\bin\`.
+ * Local access to the `lmutil.exe` included with the license server installation.
    
 ## Getting Started
 
