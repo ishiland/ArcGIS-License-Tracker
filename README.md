@@ -80,4 +80,4 @@ Tests can be ran using `python manage.py test`
  - It would be good to have this running with a library like [ApScheduler](https://github.com/agronholm/apscheduler) for ease of setup but I ran out of time trying to get it working in production w/IIS.  Windows Task Scheduler is an extra step but seems to work fine. 
  - The database design is as follows:
     
-   ![alt text](./database.PNG "Database Diagram")
+   ![alt text](database.png "Database Diagram")
