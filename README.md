@@ -2,6 +2,8 @@ ArcGIS License Tracker
 ============
 ArcGIS License Tracker is a tool to display current and historical license usage from a concurrent use (floating) license server.
 
+![App Preview](preview.png)
+
 ## Features
 * Access current and historical license usage through the browser
 * Export license data - users, products and workstations to multiple file formats. 
@@ -11,7 +13,7 @@ ArcGIS License Tracker is a tool to display current and historical license usage
  * Python >= 3.6
  * Windows OS
  * Local access to the `lmutil.exe` included with the license server. The default location of this command line tool is in `C:\Program Files (x86)\ArcGIS\LicenseManager\bin\`.
-
+   
 ## Getting Started
 
 1. Clone the repo
@@ -46,7 +48,6 @@ ArcGIS License Tracker is a tool to display current and historical license usage
     ```
     > python manage.py read_once
     ```
-    Make sure there are no errors at this step.
   
 7. Run the development server:
     ```
@@ -59,9 +60,13 @@ ArcGIS License Tracker is a tool to display current and historical license usage
 After successfully testing in development, set the `FLASK_ENV` variable to `production` then initialize a production database using `python manage.py recreate_db`.
 
 ### Task Scheduler
-Setup a scheduled task to read license data at your desired intervals. The `read_once` command has been tested to run every minute without any issues.  
+Configure Windows Task Scheduler to update the license data. The following settings should work for most cases: 
 
-In Task Scheduler, you will want to configure the 'Action' similiar to this:
+In 'General' check 'Run Whether user is logged on'. 
+
+The 'Trigger' should be set to run between 1 and 5 minutes. Make sure to check the 'Enabled' box. 
+
+The 'Action' should look similar to this:
  - *Program/script*: path the to python executable in your virtual environment
  - *Add arguments:* `manage.py read_once`
  - *Start in*: The root directory of the application where the `manage.py` file is.  Ex. `C:\inetpub\wwwroot\arcgis-license-tracker\`
@@ -80,4 +85,4 @@ Tests can be ran using `python manage.py test`
  - It would be good to have this running with a library like [ApScheduler](https://github.com/agronholm/apscheduler) for ease of setup but I ran out of time trying to get it working in production w/IIS.  Windows Task Scheduler is an extra step but seems to work fine. 
  - The database design is as follows:
     
-   ![alt text](database.png "Database Diagram")
+   ![Database Diagram](database.png)
