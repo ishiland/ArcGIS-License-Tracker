@@ -69,7 +69,7 @@ The 'Trigger' should be set to run between 1 and 5 minutes. Make sure to check t
 The 'Action' should look similar to this:
  - *Program/script*: path the to python executable in your virtual environment
  - *Add arguments:* `manage.py read_once`
- - *Start in*: The root directory of the application where the `manage.py` file is.  Ex. `C:\inetpub\wwwroot\arcgis-license-tracker\`
+ - *Start in*: The root directory of the application where the `manage.py` file is.  Ex. `C:\arcgis-license-tracker\`
 
 ### Deploy
 Deploy to a production web server. Here are some helpful guides and tools for deploying to IIS:
@@ -82,7 +82,7 @@ There is also a sample web.config for reference included in this repo. A summary
 Tests can be ran using `python manage.py test`
 
 ## Further Thoughts
- - It would be good to have this running with a library like [ApScheduler](https://github.com/agronholm/apscheduler) for ease of setup but I ran out of time trying to get it working in production w/IIS.  Windows Task Scheduler is an extra step but seems to work fine. 
+ - It would be good to have this running with a library like [ApScheduler](https://github.com/agronholm/apscheduler) to run the license reading process but I ran out of time trying to get it working w/IIS.  Windows Task Scheduler is an extra step but seems to work fine. 
  - The database design is as follows:
     
    ![Database Diagram](database.png)
