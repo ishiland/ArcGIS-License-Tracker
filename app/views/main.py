@@ -250,7 +250,8 @@ def servername(servername):
                            users=users,
                            start_date=first_update)
 
-def clear_log():
+#TODO: clear log for updates on server
+def clear_log(servername):
     try:
         Updates.clear()
         return make_response('ok', 200)
