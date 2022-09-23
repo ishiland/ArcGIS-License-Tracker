@@ -45,7 +45,16 @@ def split_license_data(text):
 
 
 def parse_server_info(lines):
-    return parse("{:^}:\n{}: LICENSE SERVER {:w} (MASTER) V11.16.2{:^}", lines, case_sensitive=False)
+    """
+    Returns an iterable parse.Result object. The parsed word({:w}) should indicate the server status (UP/DOWN). 
+    If the parsing fails (returns None) the parsing in this function may need to be adjusted.
+    """
+    p = parse("{:^}:\n{}: LICENSE SERVER {:w} (MASTER) V{}\n{:^}", lines, case_sensitive=False)
+    if p == None:
+        p = parse("{:^}:\n{}: LICENSE SERVER {:w} V{}\n{:^}", lines, case_sensitive=False)
+    if p == None:
+        logger.info('Server status parse failed. Check read_licenses.parse_server_info against lmutil.exe output.')
+    return p
 
 
 def parse_product_info(lines):

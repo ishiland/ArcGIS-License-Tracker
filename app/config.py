@@ -15,7 +15,7 @@ class BaseConfig(object):
     LOG_BACKUPS = 0
     SECRET_KEY = 'houdini'
     # use sqlite by default
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///app.db')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///app.db'
 
 
 class DevelopmentConfig(BaseConfig):
