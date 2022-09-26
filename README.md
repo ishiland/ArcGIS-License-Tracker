@@ -1,5 +1,7 @@
 ArcGIS License Tracker
 ============
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/ishiland/ArcGIS-License-Tracker/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/ishiland/ArcGIS-License-Tracker/tree/master)
+
 A web application to display current and historical license usage from a concurrent use (floating) license server.
 
 ![App Preview](preview.png)
