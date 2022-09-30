@@ -8,6 +8,9 @@ class TestFunctions(BaseTestCase):
     def test_parse_server_info(self):
         result = parse_server_info(self.prod_server_data)
         self.assertEqual(result[2], 'UP')
+        
+        result = parse_server_info(self.prod_server_data_v2)
+        self.assertEqual(result[2], 'UP')
 
         result = parse_server_info(self.backup_server_data)
         self.assertEqual(result[2], 'UP')
@@ -18,6 +21,9 @@ class TestFunctions(BaseTestCase):
     def test_split_license_data(self):
         result = split_license_data(self.prod_server_data)
         self.assertEqual(len(result), 21)
+
+        result = split_license_data(self.prod_server_data_v2)
+        self.assertEqual(len(result), 25)
 
         result = split_license_data(self.backup_server_data)
         self.assertEqual(len(result), 21)

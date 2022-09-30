@@ -16,6 +16,9 @@ class BaseTestCase(TestCase):
         with open(os.path.join(dir_path, 'data', 'prod-license.txt')) as data:
             self.prod_server_data = data.read()
 
+        with open(os.path.join(dir_path, 'data', 'prod-license-v2.txt')) as data:
+            self.prod_server_data_v2 = data.read()
+
         with open(os.path.join(dir_path, 'data', 'backup-license.txt')) as data:
             self.backup_server_data = data.read()
 

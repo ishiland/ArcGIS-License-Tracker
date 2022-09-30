@@ -1,0 +1,92 @@
+lmutil - Copyright (c) 1989-2021 Flexera. All Rights Reserved.
+Flexible License Manager status on Mon 9/26/2022 11:59
+ 
+[Detecting lmgrd processes...]
+License server status: 27000@stgarcgis103
+    License file(s) on stgarcgis103: C:\Program Files\ArcGIS\LicenseManager\bin\service.txt:
+ 
+stgarcgis103: license server UP v11.18.2
+ 
+Vendor daemon status (on STGARCGIS103):
+ 
+    ARCGIS: UP v11.18.2
+Feature usage info:
+ 
+Users of ACT:  (Total of 1 license issued;  Total of 0 licenses in use)
+ 
+Users of 3DAnalystP:  (Total of 4 licenses issued;  Total of 0 licenses in use)
+ 
+Users of ARC/INFO:  (Total of 3 licenses issued;  Total of 0 licenses in use)
+ 
+Users of ArcStorm:  (Total of 3 licenses issued;  Total of 0 licenses in use)
+ 
+Users of ArcStormEnable:  (Total of 3 licenses issued;  Total of 0 licenses in use)
+ 
+Users of dataInteropP:  (Total of 1 license issued;  Total of 1 license in use)
+ 
+  "dataInteropP" v10.1, vendor: ARCGIS, expiry: permanent(no expiration date)
+  floating license
+ 
+    felicia GC-04-026P DESKTOP-ABEPPIC (v10.1) (stgarcgis103/27000 902), start Mon 9/26 10:50
+ 
+Users of desktopAdvP:  (Total of 3 licenses issued;  Total of 2 licenses in use)
+ 
+  "desktopAdvP" v10.1, vendor: ARCGIS, expiry: permanent(no expiration date)
+  floating license
+ 
+    felicia GC-04-026P DESKTOP-ABEPPIC (v10.1) (stgarcgis103/27000 802), start Mon 9/26 10:49
+    jimmy devinfosandbox 10VMGC126 (v10.1) (stgarcgis103/27000 502), start Mon 9/26 10:56
+ 
+Users of desktopBasicP:  (Total of 15 licenses issued;  Total of 0 licenses in use)
+ 
+Users of desktopStdP:  (Total of 2 licenses issued;  Total of 0 licenses in use)
+ 
+Users of Editor:  (Total of 2 licenses issued;  Total of 0 licenses in use)
+ 
+Users of geostatAnalystP:  (Total of 5 licenses issued;  Total of 1 license in use)
+ 
+  "geostatAnalystP" v10.1, vendor: ARCGIS, expiry: permanent(no expiration date)
+  floating license
+ 
+    felicia GC-04-026P DESKTOP-ABEPPIC (v10.1) (stgarcgis103/27000 402), start Mon 9/26 10:50
+ 
+Users of GeoStats:  (Total of 5 licenses issued;  Total of 0 licenses in use)
+ 
+Users of Grid:  (Total of 6 licenses issued;  Total of 0 licenses in use)
+ 
+Users of Interop:  (Total of 1 license issued;  Total of 0 licenses in use)
+ 
+Users of MrSID:  (Total of 3 licenses issued;  Total of 0 licenses in use)
+ 
+Users of Network:  (Total of 4 licenses issued;  Total of 0 licenses in use)
+ 
+Users of networkAnalystP:  (Total of 4 licenses issued;  Total of 1 license in use)
+ 
+  "networkAnalystP" v10.1, vendor: ARCGIS, expiry: permanent(no expiration date)
+  floating license
+ 
+    felicia GC-04-026P DESKTOP-ABEPPIC (v10.1) (stgarcgis103/27000 302), start Mon 9/26 10:50
+ 
+Users of Plotting:  (Total of 3 licenses issued;  Total of 0 licenses in use)
+ 
+Users of Publisher:  (Total of 5 licenses issued;  Total of 0 licenses in use)
+ 
+Users of spatialAnalystP:  (Total of 5 licenses issued;  Total of 1 license in use)
+ 
+  "spatialAnalystP" v10.1, vendor: ARCGIS, expiry: permanent(no expiration date)
+  floating license
+ 
+    felicia GC-04-026P DESKTOP-ABEPPIC (v10.1) (stgarcgis103/27000 602), start Mon 9/26 10:50
+ 
+Users of TIFFLZW:  (Total of 3 licenses issued;  Total of 0 licenses in use)
+ 
+Users of TIN:  (Total of 4 licenses issued;  Total of 0 licenses in use)
+ 
+Users of Tracking:  (Total of 5 licenses issued;  Total of 0 licenses in use)
+ 
+Users of Viewer:  (Total of 15 licenses issued;  Total of 1 license in use)
+ 
+  "Viewer" v10.1, vendor: ARCGIS, expiry: permanent(no expiration date)
+  floating license
+ 
+    jimmy 10VMGC126 x(CIt+VSq2&Jr,?C|jFymF5}z`/ (v10.1) (stgarcgis103/27000 702), start Mon 9/26 10:08
